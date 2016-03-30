@@ -1,0 +1,985 @@
+
+<!doctype html>
+<html>
+<head>
+  <title>Network | Basic usage</title>
+
+  <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
+  <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
+  <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    #mynetwork {
+      width: 75%;
+      height: 700px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+
+<p>
+  There are a lot of options with arrows! They can also be combined with dashed lines.
+</p>
+
+<div id="mynetwork"></div>
+<script>
+  // var gSheetUrl = 'https://spreadsheets.google.com/feeds/list/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/od6/public/values?alt=json-in-script';
+  // $.ajax({
+  //   dataType: "jsonp",
+  //   url: gSheetUrl,
+  //   success: function(data){
+  //     console.log(data);
+  //     window.feed = data.feed;
+  //   }
+  // });
+  var institutions = [
+  {
+    "Serial": 1,
+    "Name of Institution": "National Technical Research Organisation",
+    "Acronym": "NTRO",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2004,
+    "Parent Node": "PMO",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://www.ntro.gov.in",
+    "Issue tags": "Surveillance, Cybercrime, R&D",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Specialised government agency for the collection of technical intelligence and sharing it with other agencies. 'The agency develops technology capabilities in aviation and remote sensing, data gathering and processing, cyber security, cryptology systems, strategic hardware and software development and strategic monitoring. NTRO also has access to data from Technology Experiment Satellite (TES), Cartosat-2A and Cartosat-2B besides two Radar Imaging Satellites namely RISAT-1 and RISAT-2.' It is modelled after the National Security Agency in the USA."
+  },
+  {
+    "Serial": 2,
+    "Name of Institution": "National Institute of Cryptology Research and Development",
+    "Acronym": "NICRD",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2008,
+    "Parent Node": "PMO",
+    "Child Node": "NTRO",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "No website",
+    "Issue tags": "R&D",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "The NICRD is under the NTRO, in order to create a pool of experts in information security for industry and Government. It will design and develop encryption productions of national security applications. It will have modern laboratories such as stimulation labs, digital fortress labs for financial security."
+  },
+  {
+    "Serial": 3,
+    "Name of Institution": "National Critical Information Infrastructure Protection Centre",
+    "Acronym": "NCIIPC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2014,
+    "Parent Node": "PMO",
+    "Child Node": "NTRO",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "No website",
+    "Issue tags": "Critical Information Infrastructure Protection, Cybercrime",
+    "Type tags": "Incident response",
+    "Mandate": "The NCIIPC was created to monitor, intercept and assess threats to crucial infrastructure and other vital installations from intelligence gathered using sensors and platforms which include satellites, underwater buoys, drones, VSAT-terminal locators and fiber-optic cable nodal tap points. It will provide R&D in the area of information protection by drawing on the capabilities in industry and educational institutions."
+  },
+  {
+    "Serial": 4,
+    "Name of Institution": "National Security Council",
+    "Acronym": "NSC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1998,
+    "Parent Node": "PMO",
+    "Child Node": "NA",
+    "Members": "National Security Advisor, Deputy National Security Advisor, Defence Minister, External Affairs Minister, Home Minister, Finance Minister, Deputy Chairman Planning Commission",
+    "RTI?": "Yes",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, CII protection, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "Apex body chaired by the National Security Advisor for intelligence coordination, consisting of the 3-tiered JIC, SPG and NSAB"
+  },
+  {
+    "Serial": 5,
+    "Name of Institution": "Strategic Policy Group",
+    "Acronym": "SPG",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1998,
+    "Parent Node": "PMO",
+    "Child Node": "NSC",
+    "Members": "Cabinet Secretary, Chief of Army Staff, Chief of Naval Staff, Chief of Air Staff, Governor RBI, Foreign Secretary, Home Secretary, Director IB, Defence Secretary, Secretary (Defense Production), Finance Secretary, Revenue Secretary, RAW head, Department of Atomic Energy Secretary, Scientific Advisor to Defence Minister, Secretary Department of Space, Chairman JIC",
+    "RTI?": "Yes",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, CII protection, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "Chaired by the Cabinet Secretary, consisting of serving senior officials responsible for policy-making and for follow up action in matters concerning national security. It includes the Chiefs of the Armed Forces, the Intelligence Bureau and the Research and Analysis Wing. Its main task is to make policy recommendations to the National Security Council."
+  },
+  {
+    "Serial": 6,
+    "Name of Institution": "National Security Advisory Board",
+    "Acronym": "NSAB",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1998,
+    "Parent Node": "PMO",
+    "Child Node": "NSC",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://nsab.gov.in/",
+    "Issue tags": "Surveillance, CII protection, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "The National Security Advisory Board consists of senior retired officials, civilian as well as military, academics and distinguished members of civil society drawn from and having expertise in Internal and External Security, Foreign Affairs, Defence, Science & Technology and Economic Affairs. The NSAB meets at least once a month or more frequently as needed. Its principal function is to undertake long-term analysis of and provide perspectives on issues of national security. It may also take up for study specific issues which the National Security Council may refer to it. Its policy recommendations and options are conveyed to the National Security Council for its consideration."
+  },
+  {
+    "Serial": 7,
+    "Name of Institution": "National Security Council Secretariat (Joint Intelligence Committee)",
+    "Acronym": "NSCS",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1998,
+    "Parent Node": "PMO",
+    "Child Node": "NSC",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, CII protection, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "The JIC analyzes intelligence data from the Intelligence Bureau, R&AW and the Directorates of Military, Naval and Air Intelligence. The JIC has its own Secretariat that works under the Cabinet Secretariat."
+  },
+  {
+    "Serial": 8,
+    "Name of Institution": "Research and Analysis Wing",
+    "Acronym": "RAW",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1968,
+    "Parent Node": "PMO",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Premier agency for the collection of external intelligence and plays an important role in formulating India's domestic and foreign policy. Founded mainly to gather intelligence on China and Pakistan, its mandate has expanded to include external intelligence more generally. Monitoring the political and military developments in adjoining countries, which have direct bearing on India's national security and in the formulation of its foreign policy and seeking the control and limitation of the supply of military hardware to Pakistan, mostly from European countries, the United States, and China is among its functions. The chief of RAW is designated secretary (research) in the Cabinet Secretariat, which is part of the prime minister's office."
+  },
+  {
+    "Serial": 9,
+    "Name of Institution": "Computer Emergency Response Team India",
+    "Acronym": "CERT-In",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2004,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "Defence, Finance, Energy, Transportation, Telecommunications",
+    "RTI?": "No",
+    "Website link": "http://www.cert-in.org.in",
+    "Issue tags": "CII protection, Cybercrime",
+    "Type tags": "Incidence Response, Statutory Body",
+    "Mandate": "CERT-In was created to provide immediate and effective response to computer security incidents. It is responsible for the collection, analysis and dissemination of information on cyber incidents; forecast and alert when there might be such cybersecurity incidents; take emergency measures; coordinate cyber security incidence response activities; issue guidelines, advisories, vulnerability notes and whitepapers relating to information security practices, procedures, prevention, response and reporting of cyber incidents."
+  },
+  {
+    "Serial": 10,
+    "Name of Institution": "Botnet Cleaning and Malware Analyis Centre/Digital Swachhata Kendra (Proposed)",
+    "Acronym": "DSK",
+    "Proposed (Yes/No)": "Yes",
+    "Year Started": "NA",
+    "Parent Node": "MCIT",
+    "Child Node": "CERT-In",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "CII protection, Cybercrime",
+    "Type tags": "Incident Response",
+    "Mandate": "NA"
+  },
+  {
+    "Serial": 11,
+    "Name of Institution": "Centre for Development of Advanced Computing",
+    "Acronym": "CDAC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1988,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.cdac.in/",
+    "Issue tags": "R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "Premier agency for research and development of IT, Electronics and associated areas. It was initially set up to handle the denial of import of supercomputers from the USA. It has also built Indian Language Computing Solutions with setting up of GIST group (Graphics and Intelligence based Script Technology)."
+  },
+  {
+    "Serial": 12,
+    "Name of Institution": "Education and Research in Computer Networking",
+    "Acronym": "ERNET",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1986,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.eis.ernet.in/",
+    "Issue tags": "R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "It is an autonomous society under the MCIT. As initial participating agencies, it worked with NCST (National Centre for Software Technology) Bombay, IISc (Indian Institute of Science) Bangalore, five IITs (Indian Institutes of Technology) at Delhi, Bombay, Kanpur, Kharagpur and Madras, and the DoE, New Delhi. It is the largest terrestrial and satellite network in the coutnry."
+  },
+  {
+    "Serial": 13,
+    "Name of Institution": "Controller of Certifying Authority",
+    "Acronym": "CCA",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2000,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://cca.gov.in",
+    "Issue tags": "Cybercrime",
+    "Type tags": "Licensing Authority/Regulatory Body, Statutory Body",
+    "Mandate": "The CCA aims at promoting the growth of E-Commerce and E- Governance through the wide use of digital signatures. Its function is to license and regulate the working of Certifying Authorities, who issue digital signature certificates for electronic authentication of users. The CCA certifies the public keys of CAs using its own private key, which enables users in the cyberspace to verify that a given certificate is issued by a licensed CA. For this purpose it operates, the Root Certifying Authority of India(RCAI). The CCA also maintains the Repository of Digital Certificates, which contains all the certificates issued to the CAs in the country."
+  },
+  {
+    "Serial": 14,
+    "Name of Institution": "Telecom Regulatory Authority of India",
+    "Acronym": "TRAI",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1997,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://trai.gov.in",
+    "Issue tags": "Cybercrime",
+    "Type tags": "Licensing Authority/Regulatory Body, Statutory Body",
+    "Mandate": "The functions of TRAI are to to regulate telecom services, including fixation/revision of tariffs for telecom services. One of the main objectives of TRAI is to provide a fair and transparent policy environment which promotes a level playing field and facilitates fair competition."
+  },
+  {
+    "Serial": 15,
+    "Name of Institution": "National Internet Exchange of India",
+    "Acronym": "NIELIT",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2003,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://nixi.in/",
+    "Issue tags": "Infrastructure",
+    "Type tags": "Section 25 Company",
+    "Mandate": "NIXI is a not for profit Organization under section 25 of the Companies Act 1956, and was registered on 19th June, 2003. NIXI was set up for peering of ISPs among themselves for the purpose of routing the domestic traffic within the country"
+  },
+  {
+    "Serial": 16,
+    "Name of Institution": "National Informatics Centre",
+    "Acronym": "NIC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1976,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.nic.in",
+    "Issue tags": "Infrastructure",
+    "Type tags": "Autonomous society",
+    "Mandate": "prime builder\" of e-Government / e-Governance applications up to the grassroots level as well as a promoter of digital opportunities for sustainable development. NIC, through its ICT Network, \"NICNET\", has institutional linkages with all the Ministries /Departments of the Central Government, 35 State Governments/ Union Territories, and about 625 District administrations of India. NIC has been instrumental in steering e-Government/e-Governance applications in government ministries/departments at the Centre, States, Districts and Blocks, facilitating improvement in government services, wider transparency, promoting decentralized planning and management, resulting in better efficiency and accountability to the people of India."
+  },
+  {
+    "Serial": 17,
+    "Name of Institution": "National Informatics Centre Services Inc.",
+    "Acronym": "NICSI",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1995,
+    "Parent Node": "MCIT",
+    "Child Node": "NIC",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://nicsi.nic.in/",
+    "Issue tags": "Infrastructure",
+    "Type tags": "Section 25 Company",
+    "Mandate": "IT company with a government facing focus and more than 17 years of experience in assisting government organizations by providing state of art and cost effective solutions for all their growing ICT needs. These solutions are delivered through purchase of products and services from high quality vendors, empanelled with NICSI. NICSI’s procurement processes are fully compliant with GFR rules of Government of India."
+  },
+  {
+    "Serial": 18,
+    "Name of Institution": "Standardisation Testing Quality Certification Directorate",
+    "Acronym": "STQC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.stqc.gov.in",
+    "Issue tags": "R&D",
+    "Type tags": "Testing and Certification body",
+    "Mandate": "Services in the fields of Testing, Calibration, Certification, IT and e-Governance, training and guidance to information Technology, Telecommunications and Electronics Industry etc. STQC Directorate, Department of information Technology in the Ministry of Communications and Information Technology is responsible for dissemination of above mentioned services globally."
+  },
+  {
+    "Serial": 19,
+    "Name of Institution": "Centre for Materials for Electronics Technology",
+    "Acronym": "CMET",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1990,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://cmet.gov.in",
+    "Issue tags": "R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "Dedicated to the furtherance of competent research and development in the firmament of Electronic Materials, the Centre for Materials for Electronics Technology (C-MET) functions as an autonomous scientific society under Dept. of Electronics & Information Technology, Ministry of Communications and Information Technology (MCIT), Govt. of India. Besides augmenting core competence, C-MET envisions attainment of self-sufficiency in the sphere of Electronic materials, components and devices to cater to India’s strategic and industrial applications, exploiting indigenous resources of raw materials."
+  },
+  {
+    "Serial": 20,
+    "Name of Institution": "National Institute of Electronics and Information Technology",
+    "Acronym": "NIELIT",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1990,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.nielit.in/",
+    "Issue tags": "R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "31 offices located at Agartala, Aizawl, Ajmer, Aurangabad, Calicut, Chandigarh, Chennai, Chuchuyimlang, Churachandpur, Delhi, Gangtok, Gorakhpur, Guwahati, Imphal, Itanagar, Jammu, Jorhat, Kohima, Kolkata, Kokrajhar, Leh, Lucknow, Lunglei, Patna, Ranchi, Senapati, Shillong, Shimla, Silchar, Srinagar, Tezpur with its Head quarters at New Delhi"
+  },
+  {
+    "Serial": 21,
+    "Name of Institution": "Society for Applied Microwave Electronics Engineering and Research",
+    "Acronym": "SAMEER",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1984,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "Centers in Mumbai, Chennai and Kolkata",
+    "RTI?": "No",
+    "Website link": "http://sameer.gov.in",
+    "Issue tags": "R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "To achieve excellence in application-oriented research in the areas of RF/Microwave Electronics, Millimeter wave Technology and Electromagnetics. Particularly, Mumbai: It has been pursuing research and development in the field of Optoelectronics, Medical electronics, Radar based Instrumentation, Atmospheric Remote Sensing & Meteorology, RF & Microwave systems and components, Navigational aids etc. The core competency developed in SAMEER, Mumbai, over the years, can be broadly classified into two categories, namely, design and engineering of systems for varied applications and development of processes for fabrication of high-tech electronic and opto-electronic components. SAMEER, Mumbai maintains a judicious balance in these two areas and this has given SAMEER the desired versatility. Many of SAMEER's R&D outputs and spin-offs have found applications and acceptance in industry. Chennai Centre: It is a National facility for advanced research and development in Electromagnetic Interference and Compatibility (EMI/EMC). It offers comprehensive test, consultancy, training, engineering and research services to national agencies and electronic industries in India. It is involved in R&D in RF communication, RF & Microwave antennas and Electronics packaging. Kolkata Centre: It is involved in the development of RF, Microwave and Millimeter-wave components and sub-systems for different users in the country. It has recently established full-fledged EMI/EMC Test and Measurement facility for evaluation of electronic products for CE marking."
+  },
+  {
+    "Serial": 22,
+    "Name of Institution": "Software Technology Parks of India",
+    "Acronym": "STPI",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 0,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "51 Centers",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Infrastructure",
+    "Type tags": "Autonomous society",
+    "Mandate": "society set up by the Ministry of Communications and Information Technology, Government of India in 1991, with the objective of encouraging, promoting and boosting the Software Exports from India"
+  },
+  {
+    "Serial": 23,
+    "Name of Institution": "Media Lab Asia",
+    "Acronym": "MLA",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2002,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.medialabasia.in/",
+    "Issue tags": "R&D",
+    "Type tags": "Section 25 Company",
+    "Mandate": "MLAsia works on the paradigm of collaborative research in the task of developing relevant and sustainable technologies and culturally appropriate solutions and bringing them to the daily lives of people. MLAsia works with Academic and Research and Development institutions, industry, NGOs and Government in this endeavour."
+  },
+  {
+    "Serial": 24,
+    "Name of Institution": "Inter Ministerial Standing Committee",
+    "Acronym": "IMSC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, CII protection, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "No info"
+  },
+  {
+    "Serial": 25,
+    "Name of Institution": "Information Security Technology Development Council/Working Groups",
+    "Acronym": "ISTDCG",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, CII protection, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "No info"
+  },
+  {
+    "Serial": 26,
+    "Name of Institution": "Semiconductor Integrated Circuits Layout-Design Registry",
+    "Acronym": "SICLR",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2000,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://sicldr.gov.in/",
+    "Issue tags": "R&D",
+    "Type tags": "Statutory body",
+    "Mandate": "Protection of original Layout-Designs of Semiconductor Integrated Circuits as per the provisions of the Semiconductor Integrated Circuits Layout- Design Act 2000.Promote protection of Intellectual Property of Semiconductor Integrated Circuits Layout-Designs."
+  },
+  {
+    "Serial": 27,
+    "Name of Institution": "Telecom Enforcement and Resource Monitoring Cell",
+    "Acronym": "TERM",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2008,
+    "Parent Node": "MCIT",
+    "Child Node": "DoT",
+    "Members": "Delhi, Mumbai, Hyderabad, Chennai, Punjab, Rajasthan, Gujarat, Karnataka etc upto 34",
+    "RTI?": "No",
+    "Website link": "http://www.dot.gov.in/term/term-security",
+    "Issue tags": "Surveillance",
+    "Type tags": "Licensing Authority/Regulatory Body",
+    "Mandate": "The body was initially called Vigilance Telecom Monitoring, and is tasked with acting as the Telegraph Authority in the field at all the Licence Service Areas and Large Telecom Districts of the country, in order to ensure that service providers adhere to the licence conditions and for taking care of telecom network security issues. TERM has 34 local cells in every state of the country, which help in carrying out the requirements of the Central Monitoring System. Among its security functions are to be a technical interface between security agencies and Telecom Service Providers. According to the official website, the agency's functions include 'matters related to national security' and 'perform such other functions as may be entrusted to it from time to time by the DOT in overall interest of the country and consumers'."
+  },
+  {
+    "Serial": 28,
+    "Name of Institution": "Centre for Development of Telematics",
+    "Acronym": "CDoT",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1984,
+    "Parent Node": "MCIT",
+    "Child Node": "DoT",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://www.cdot.in",
+    "Issue tags": "Surveillance, R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "It is an autonomous body, vested with full authority and total flexibility to develop state-of-the-art telecommunication technology to meet the needs of the Indian telecommunication network. It developed switching systems for rural India, and is responsible for research on Next Generation Networks and is also entrusted with some functions of the Central Monitoring System."
+  },
+  {
+    "Serial": 29,
+    "Name of Institution": "Telecommunication Engineering Center",
+    "Acronym": "TEC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "MCIT",
+    "Child Node": "DoT",
+    "Members": "Delhi, Kolkata, Mumbai, Bangalore",
+    "RTI?": "No",
+    "Website link": "http://tec.gov.in",
+    "Issue tags": "R&D",
+    "Type tags": "Testing and Certification body",
+    "Mandate": "The TEC is responsible for drawing up of standards, generic requirements, interface requirements, service requirements and specifications for telecom products, services and networks."
+  },
+  {
+    "Serial": 30,
+    "Name of Institution": "National Media Analytics Centre (Proposed)",
+    "Acronym": "NMAC",
+    "Proposed (Yes/No)": "Yes",
+    "Year Started": "NA",
+    "Parent Node": "MCIT",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "NA",
+    "Website link": "NA",
+    "Issue tags": "Surveillance, Social Media Analyses",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Monitor and analyse round-the-clock blogs, web portals of TV channels and newspapers, and social media platforms such as Facebook, Twitter, Instagram and YouTube."
+  },
+  {
+    "Serial": 31,
+    "Name of Institution": "Unique Identity Authority of India",
+    "Acronym": "UIDAI",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2009,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://uidai.gov.in/",
+    "Issue tags": "Surveillance",
+    "Type tags": "Records database, Statutory Body, Attached office",
+    "Mandate": "The UID scheme is a national identity database, consisting demographic and biometric information of residents in India. The function of aggregation and de-duplication of this data vests with UIDAI."
+  },
+  {
+    "Serial": 32,
+    "Name of Institution": "Defence Research and Development Organisation",
+    "Acronym": "DRDO",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1958,
+    "Parent Node": "MoD",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://drdo.gov.in/",
+    "Issue tags": "Surveillance, R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "To function, with the concurrence of the Ministry of External Affairs, as the nodal coordinating agency of the Ministry of Defence on all matters relating to Instruments of Accord with foreign Governments relating to the acquisition of technologies whose export to India is the subject of national security related controls of foreign Governments. Formulation and execution of programmes of scientific research and design, development, test and evaluation, in fields of relevance to national security. Direction and administration of agencies, laboratories, establishments, ranges, facilities, programmes and projects of the Department. Design, develop and lead to production state-of-the-art sensors, weapon systems, platforms and allied equipment for our Defence Services; Provide technological solutions to the Services to optimise combat effectiveness and to promote well-being of the troops; develop infrastructure and committed quality manpower and build strong indigenous technology base"
+  },
+  {
+    "Serial": 33,
+    "Name of Institution": "Defence Intelligence Agency",
+    "Acronym": "DIA",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2002,
+    "Parent Node": "MoD",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Combines the intelligence networks of all three armed services of India (Army, Navy, and Air Force). The creation of the DIA significantly reduces the reliance of the Indian Armed Forces on civilian intelligence agencies such as IB and RAW for information and enemy troop assessments."
+  },
+  {
+    "Serial": 34,
+    "Name of Institution": "Institute of Defense Studies and Analysis",
+    "Acronym": "IDSA",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1965,
+    "Parent Node": "MoD",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://idsa.in",
+    "Issue tags": "R&D",
+    "Type tags": "Autonomous society",
+    "Mandate": "conduct study and research on problems of national security and the impact of defence measures on the economic, security and social life of the country"
+  },
+  {
+    "Serial": 35,
+    "Name of Institution": "Intelligence Bureau",
+    "Acronym": "IB",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1887,
+    "Parent Node": "MHA",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://mha.nic.in/intelligence",
+    "Issue tags": "Surveillance",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Agency responsible for internal intelligence. Details about its functions is classified."
+  },
+  {
+    "Serial": 36,
+    "Name of Institution": "National Counter Terrorism Centre (Proposed)",
+    "Acronym": "NCTC",
+    "Proposed (Yes/No)": "Yes",
+    "Year Started": "NA",
+    "Parent Node": "MHA",
+    "Child Node": "IB",
+    "Members": "NA",
+    "RTI?": "NA",
+    "Website link": "NA",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "NA"
+  },
+  {
+    "Serial": 37,
+    "Name of Institution": "National Crime Records Bureau",
+    "Acronym": "NCRB",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1986,
+    "Parent Node": "MHA",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://ncrb.nic.in/",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Records database",
+    "Mandate": "Its function is to empower Indian Police with Information Technology and Criminal Intelligence to enable them to effectively enforce the law. More specifically, act as a clearing house of information on crime and criminals so as to assist the investigators and others in linking crimes to their perpetrators; to store, coordinate and disseminate information on inter-state and international criminals from and to respective states, national investigating agencies, courts and prosecutors in India without having to refer to police station records; coordinate, guide and assist in the functioning of the State Crime Records Bureaux; provide training facilities to personnel of the State Crime Records Bureaux; and evaluate, develop and modernize the State Crime Record Bureaux. Handles the CCTNS."
+  },
+  {
+    "Serial": 38,
+    "Name of Institution": "Narcotics Control Bureau (for Drug Related Offenses)",
+    "Acronym": "NCB",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1986,
+    "Parent Node": "MHA",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://www.ceib.nic.in/ncb.htm",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Co-ordination of actions by various offices, State Governments and other authorities under the N.D.P.S. Act, Customs Act, Drugs and Cosmetics Act; counter measures against illicit traffic under the various international conventions and protocols that are in force at present or which may be ratified or acceded to by India in future; assist concerned authorities in foreign countries and concerned international organisations, Ministries, Departments and Organisations in respect of matters relating to drug abuse. The Narcotics control Bureau is the apex coordinating agency. It also functions as an enforcement agency through its field units located at Bombay, Delhi, Calcutta, madras, Varanasi, Jodhpur, chandigarh, Jammu, Ahmedabad, Imphal and Tiruvananthapuram."
+  },
+  {
+    "Serial": 39,
+    "Name of Institution": "National Intelligence Grid",
+    "Acronym": "NATGRID",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2014,
+    "Parent Node": "MHA",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://nisg.org/project/54",
+    "Issue tags": "Surveillance",
+    "Type tags": "Intelligence Agency, Records database",
+    "Mandate": "Conceived to develop a cutting edge framework to enhance India’s counter-terror capabilities. The project entails combining 21 sensitive databases relating to domains such as banks, credit cards, cell phone usage, immigration records, motor vehicle registrations, Income Tax records and National Crime Records Bureau into a single database for access by authorised officers from ten Central agencies such as RAW, IB, CBI, DRI and ED. It is essentially a data transfer tool that hopes to give investigators a 360 degree profile of a suspect."
+  },
+  {
+    "Serial": 40,
+    "Name of Institution": "National Cyber Coordination Centre",
+    "Acronym": "NCCC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2014,
+    "Parent Node": "MHA",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "This agency has been set up to coordinate intelligence gathering efforts related to cybersecurity. Its main function is also metadata analysis."
+  },
+  {
+    "Serial": 41,
+    "Name of Institution": "Financial Intelligence Unit",
+    "Acronym": "FIU",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2004,
+    "Parent Node": "MoF",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://fiuindia.gov.in/",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "FIU is a central national agency responsible for receiving, processing, analyzing and disseminating information relating to suspect financial transactions. FIU-IND is also responsible for coordinating and strengthening efforts of national and international intelligence, investigation and enforcement agencies in pursuing the global efforts against money laundering and related crimes. FIU-IND is an independent body reporting directly to the Economic Intelligence Council (EIC) headed by the Finance Minister."
+  },
+  {
+    "Serial": 42,
+    "Name of Institution": "Economic Intelligence Council",
+    "Acronym": "EIC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1990,
+    "Parent Node": "MoF",
+    "Child Node": "NA",
+    "Members": "Minister of Finance, RBI Governor, SEBI Chairman, Director CBI, Director NCB, Directorate General of Revenue Intelligence, Finance Secretary, Revenue Secretary, Company Affairs Secretary, Additional Secretary of Banking, Central Board of Excise and Customs Chairman and members, Central Board of Direct Taxes Chairman and members, Department Heads of CEIB",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "The Economic Intelligence Council is an apex forum for coordination, exchange of information and evolving common strategies to combat economic offences. Its responsiblities include inter-agency coordination, discussing measures to strengthen the working of various enforcement agencies under the Ministry of Finance. It also includes examining the changing dynamics of economic crimes and suggesting measures for dealing with these crimes more effectively. It seeks to act as a forum for exchange of intelligence on important economic offences."
+  },
+  {
+    "Serial": 43,
+    "Name of Institution": "Central Economic Intelligence Bureau",
+    "Acronym": "CEIB",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1985,
+    "Parent Node": "MoF",
+    "Child Node": "DoR",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://ceib.nic.in",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "A body that coordinates and strengthen the intelligence gathering activities as well as investigative efforts of all the agencies which enforce economic laws. The Bureau is responsible for watching different aspects of economic offences as well as the emergence of new types of such offences."
+  },
+  {
+    "Serial": 44,
+    "Name of Institution": "Directorate General for Revenue Intelligence",
+    "Acronym": "DGRI",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1957,
+    "Parent Node": "MoF",
+    "Child Node": "CEIB",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://dri.nic.in/",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Collection of intelligence about smuggling of contraband goods, narcotics, under-invoicing, over-invoicing etc. through sources of India and abroad, including secret sources; Analysis and dissemination of such intelligence to the field formations for action; other anti-smuggling operations, liasing with the CBI and enforcement agencies abroad on related matters."
+  },
+  {
+    "Serial": 45,
+    "Name of Institution": "Directorate of Enforcement (for Foreign Exchange related offences)",
+    "Acronym": "DoE",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2000,
+    "Parent Node": "MoF",
+    "Child Node": "CEIB",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://ceib.nic.in/ed.htm",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "The Enforcement Directorate is concerned with the enforcement of the provisions of the Foreign Exchange Management Act to prevent leakage of foreign exchange. Its functions include to collect and develop intelligence relating to violation of the provisions of Foreign Exchange Regulation Act, to adjudicate cases of violations of Foreign Exchange Management Act for levying penalties departmentally and to realise the penalties imposed in departmental adjudication."
+  },
+  {
+    "Serial": 46,
+    "Name of Institution": "Directorate General of Income Tax (Investigation) for Income Tax related offences",
+    "Acronym": "DGIT",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "MoF",
+    "Child Node": "CEIB",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://ceib.nic.in/dgit.htm",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Head the investigation wing of the Income Tax Department at the Regional Level; Its functions include collection of intelligence pertaining to evasion of Direct Taxes, disseminationof information and intelligence collected- by passing on the same to the concerned authorities including assessing authorities;"
+  },
+  {
+    "Serial": 47,
+    "Name of Institution": "Directorate General of Anti-Evasion (for Central Excise related offences)",
+    "Acronym": "DGAE",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "MoF",
+    "Child Node": "CEIB",
+    "Members": "NA",
+    "RTI?": "Yes",
+    "Website link": "http://ceib.nic.in/dgae.htm",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Collection, collation and dissemination of intelligence relating to evasion of central excise duties on an all India basis; Co-ordinating action with Enforcement agencies like Income-tax, Sales-tax etc. Maintaining liaison with other Central and State agencies in matters pertaining to tax evasion"
+  },
+  {
+    "Serial": 48,
+    "Name of Institution": "Electronic Media Monitoring Centre",
+    "Acronym": "EMMC",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2008,
+    "Parent Node": "MIB",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://emmc.gov.in/",
+    "Issue tags": "Surveillance, Social Media Analyses, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Content monitoring on networks. 200 content auditors at send hourly reports and text messages of news breaking on any channel to top bureaucrats including the Principal Secretary to the Prime Minister, the National Security Advisor and the Cabinet Secretary."
+  },
+  {
+    "Serial": 49,
+    "Name of Institution": "New Media Wing (Bureau of New and Concurrent Media)",
+    "Acronym": "NMW",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2013,
+    "Parent Node": "MIB",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, Social Media Analyses, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Its functions are to be aware of websites, including micro blogs, as well as traffic relating to news breaks on the social media sites to pick up government relevant trends. It then undertakes a “sentiment analysis” to gauge public opinion."
+  },
+  {
+    "Serial": 50,
+    "Name of Institution": "Central Bureau of Investigation",
+    "Acronym": "CBI",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 1963,
+    "Parent Node": "MPPGP",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://cbi.nic.in/",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "CBI is an investigative body that investigates breaches of Central Laws, the enforcement of which the Government of India is concerned with. It includes an Eonomic Offences Wing, which handles many varieties of 'cyber crimes'."
+  },
+  {
+    "Serial": 51,
+    "Name of Institution": "National Investigation Agency",
+    "Acronym": "NIA",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2008,
+    "Parent Node": "MPPGP",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://nia.gov.in",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Intelligence Agency",
+    "Mandate": "Agency at the Central level for investigation of offences related to terrorism and certain other Acts, which have national ramifications (Central Counter Terrorism Law Enforcement Agency)."
+  },
+  {
+    "Serial": 52,
+    "Name of Institution": "Cyber Appellate Tribunal",
+    "Acronym": "CAT",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2006,
+    "Parent Node": "MCIT",
+    "Child Node": "DEITY",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "http://catindia.gov.in/",
+    "Issue tags": "Cybercrime",
+    "Type tags": "Statutory body",
+    "Mandate": "Cyber Appellate Tribunal has been established under the Information Technology Act under the aegis of Controller of Certifying Authorities (C.C.A.). The first and the only Cyber Appellate Tribunal in the country have been established by the Central Government in accordance with the provisions contained under Section 48(1) of the Information Technology Act, 2000."
+  },
+  {
+    "Serial": 53,
+    "Name of Institution": "Cabinet Committee on Security",
+    "Acronym": "CCS",
+    "Proposed (Yes/No)": "No",
+    "Year Started": "No info",
+    "Parent Node": "NA",
+    "Child Node": "NA",
+    "Members": "PM, Minister of Home Affairs, Minister of External Affairs, Minister of Finance, Minister of Defence",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "Policy making body"
+  },
+  {
+    "Serial": 54,
+    "Name of Institution": "National Information Board",
+    "Acronym": "NIB",
+    "Proposed (Yes/No)": "No",
+    "Year Started": 2002,
+    "Parent Node": "NA",
+    "Child Node": "NA",
+    "Members": "21 members; secretaries of GoI and various ministries",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": "Surveillance, Cybercrime",
+    "Type tags": "Council/Committee",
+    "Mandate": "Policy making body for cybersecurity; chaired by NSA"
+  },
+  {
+    "Serial": 55,
+    "Name of Institution": "Global Cyber Issues Cell",
+    "Acronym": "GCIC",
+    "Proposed (Yes/No)": "MEA",
+    "Year Started": "No info",
+    "Parent Node": "MEA",
+    "Child Node": "NA",
+    "Members": "NA",
+    "RTI?": "No",
+    "Website link": "No website",
+    "Issue tags": 0,
+    "Type tags": 0,
+    "Mandate": 0
+  }
+]
+
+var ministries = [
+  {'Color': '#ff0000', 'Acronym': 'MoD'},
+  {'Color': '#ff0000', 'Acronym': 'MoF'},
+  {'Color': '#ff0000', 'Acronym': 'MEA'},
+  {'Color': '#ff0000', 'Acronym': 'MHA'},
+  {'Color': '#ff0000', 'Acronym': 'MCIT'},
+  {'Color': '#ff0000', 'Acronym': 'MPPGP'},
+  {'Color': '#ff0000', 'Acronym': 'MIB'},
+  {'Color': '#ff0000', 'Acronym': 'PMO'}
+];
+
+var departments = [
+  {'Color': '#ffff00', "Acronym": 'DEITY', "Parent Node": "MCIT", "Child Node": "NA"},
+  {'Color': '#ffff00', "Acronym": 'DoT', "Parent Node": "MCIT", "Child Node": "NA"},
+  {'Color': '#ffff00', "Acronym": 'DoR', "Parent Node": "MoF", "Child Node": "NA"},
+  {'Color': '#ffff00', "Acronym": 'DoPT', "Parent Node": "MPPGP", "Child Node": "NA"}
+  // {"Acronym": 'DRDO', "Parent Node": "MoD", "Child Node": "NA"}
+]
+
+var institution_nodes = [];
+var edges = [];
+
+
+for (var midx = 0; midx < ministries.length; midx++) {
+  institution_nodes.push({
+    id: institution_nodes.length,
+    label: ministries[midx]['Acronym'],
+    color: ministries[midx]['Color']
+  });
+}
+
+for (var didx = 0; didx < departments.length; didx++) {
+  var deptId = institution_nodes.length;
+  institution_nodes.push({
+    id: deptId,
+    label: departments[didx]['Acronym'],
+    color: departments[didx]['Color']
+  });
+  var parentNode = institution_nodes.filter(function(node){
+    return node.label === departments[didx]['Parent Node']
+  })[0];
+  edges.push({
+    from: parentNode.id,
+    to: deptId
+  });
+}
+
+for (var idx = 0; idx < institutions.length; idx++) {
+  var instId = institution_nodes.length;
+  institution_nodes.push({id: instId, label: institutions[idx]['Acronym']});
+  var parentKey = undefined;
+  if (institutions[idx]['Child Node'] !== 'NA') {
+    parentKey = 'Child Node';
+  } else if (institutions[idx]['Parent Node'] !== 'NA') {
+    parentKey = 'Parent Node';
+  }
+  if (typeof(parentKey) !== 'undefined') {
+    var parentNode = institution_nodes.filter(function(node){
+      return node.label === institutions[idx][parentKey]
+    })[0];
+    if (parentNode) {
+      edges.push({
+        from: parentNode.id,
+        to: instId
+      });
+    }
+  }
+}
+
+var nodes = new vis.DataSet(institution_nodes);
+
+
+// var edges = new vis.DataSet([
+//   {from: 1, to: 8, arrows:'to', dashes:true},
+//   {from: 1, to: 3, arrows:'to'},
+//   {from: 1, to: 2, arrows:'to, from'},
+//   {from: 2, to: 4, arrows:'to, middle'},
+//   {from: 2, to: 5, arrows:'to, middle, from'},
+//   {from: 5, to: 6, arrows:{to:{scaleFactor:2}}},
+//   {from: 6, to: 7, arrows:{middle:{scaleFactor:0.5},from:true}}
+// ]);
+
+
+  // create an array with nodes
+  // var nodes = new vis.DataSet([
+  //   {id: 1, label: 'Node 1'},
+  //   {id: 2, label: 'Node 2'},
+  //   {id: 3, label: 'Node 3'},
+  //   {id: 4, label: 'Node 4'},
+  //   {id: 5, label: 'Node 5'},
+  //   {id: 6, label: 'Node 6'},
+  //   {id: 7, label: 'Node 7'},
+  //   {id: 8, label: 'Node 8'}
+  // ]);
+
+  // // create an array with edges
+  // var edges = new vis.DataSet([
+  //   {from: 1, to: 8, arrows:'to', dashes:true},
+  //   {from: 1, to: 3, arrows:'to'},
+  //   {from: 1, to: 2, arrows:'to, from'},
+  //   {from: 2, to: 4, arrows:'to, middle'},
+  //   {from: 2, to: 5, arrows:'to, middle, from'},
+  //   {from: 5, to: 6, arrows:{to:{scaleFactor:2}}},
+  //   {from: 6, to: 7, arrows:{middle:{scaleFactor:0.5},from:true}}
+  // ]);
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  // var data = {
+  //   nodes: nodes
+  // };
+
+  var options = {};
+  var network = new vis.Network(container, data, options);
+</script>
+
+</body>
+</html>
