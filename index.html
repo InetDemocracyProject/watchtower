@@ -7,32 +7,44 @@
   <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
   <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
   <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
 
   <style type="text/css">
     #mynetwork {
-      width: 75%;
       height: 700px;
       border: 1px solid lightgray;
     }
   </style>
 </head>
 <body>
-
-<p>
-  There are a lot of options with arrows! They can also be combined with dashed lines.
-</p>
-
-<div id="mynetwork"></div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Watchtower</a>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-9">
+      <div id="mynetwork"></div>
+    </div>
+    <div class="col-md-3">
+      <div id="sidebar">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Watchtower</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-  // var gSheetUrl = 'https://spreadsheets.google.com/feeds/list/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/od6/public/values?alt=json-in-script';
-  // $.ajax({
-  //   dataType: "jsonp",
-  //   url: gSheetUrl,
-  //   success: function(data){
-  //     console.log(data);
-  //     window.feed = data.feed;
-  //   }
-  // });
   var institutions = [
   {
     "Serial": 1,
