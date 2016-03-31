@@ -5,6 +5,7 @@
   <title>Network | Basic usage</title>
 
   <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
+  <script type="text/javascript" src="ext/tabletop.js"></script>
   <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
   <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
@@ -900,7 +901,8 @@ for (var midx = 0; midx < ministries.length; midx++) {
   institution_nodes.push({
     id: institution_nodes.length,
     label: ministries[midx]['Acronym'],
-    color: ministries[midx]['Color']
+    color: ministries[midx]['Color'],
+    level: 0
   });
 }
 
@@ -909,7 +911,8 @@ for (var didx = 0; didx < departments.length; didx++) {
   institution_nodes.push({
     id: deptId,
     label: departments[didx]['Acronym'],
-    color: departments[didx]['Color']
+    color: departments[didx]['Color'],
+    level: 1
   });
   var parentNode = institution_nodes.filter(function(node){
     return node.label === departments[didx]['Parent Node']
@@ -922,7 +925,12 @@ for (var didx = 0; didx < departments.length; didx++) {
 
 for (var idx = 0; idx < institutions.length; idx++) {
   var instId = institution_nodes.length;
-  institution_nodes.push({id: instId, label: institutions[idx]['Acronym']});
+  institution_nodes.push({
+    id: instId,
+    label: institutions[idx]['Acronym'],
+    color: '#F4F4EF',
+    level: 2
+    });
   var parentKey = undefined;
   if (institutions[idx]['Child Node'] !== 'NA') {
     parentKey = 'Child Node';
@@ -989,7 +997,22 @@ var nodes = new vis.DataSet(institution_nodes);
   //   nodes: nodes
   // };
 
-  var options = {};
+  // var options = {};
+  var options = {
+    edges: {
+      smooth: {
+          type: 'cubicBezier',
+          forceDirection: 'vertical',
+          roundness: 0.4
+      }
+    },
+    layout: {
+      hierarchical: {
+          direction: 'UD'
+      }
+    },
+    physics:false
+  };
   var network = new vis.Network(container, data, options);
 </script>
 
