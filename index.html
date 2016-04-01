@@ -1,0 +1,200 @@
+
+<!doctype html>
+<html>
+<head>
+  <title>Network | Basic usage</title>
+  <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
+  <script src='http://cdn.ractivejs.org/latest/ractive.js'></script>
+  <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
+  <script type="text/javascript" src="ext/tabletop.js"></script>
+  <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+
+  <style type="text/css">
+    #mynetwork {
+      height: 700px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Watchtower</a>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+<div id='ractive-container'></div>
+<script id='watchtower-app' type='text/ractive'>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9">
+        <div id="mynetwork"></div>
+      </div>
+      <div class="col-md-3">
+        <div id="sidebar">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Watchtower</h3>
+            </div>
+            <div class="panel-body">
+              {{#selectedInst}}
+                <h2><p>{{selectedInst['Name of Institution']}}</p></h2>
+                <h5>Institution Type</h5>
+                <p><strong>{{selectedInst['Type tags']}}</strong></p>
+                <h5>Established In</h5>
+                <p><strong>{{selectedInst['Year Started']}}</strong></p>
+                <h5>Issues</h5>
+                <p><strong>{{selectedInst['Issue tags']}}</strong></p>
+                <h5>Under RTI?</h5>
+                <p><strong>{{selectedInst['RTI?']}}</strong></p>
+                <h5>URL</h5>
+                <p><strong>{{selectedInst['Website link']}}</strong></p>
+                <h5>Mandate</h5>
+                <p><strong>{{selectedInst['Mandate']}}</strong></p>
+              {{else}}
+                <p>
+                Insecure information and communication networks are a risk to individuals, to public safety, to the stability of businesses and to the security of nations. Governments assume a big role in keeping crucial and non-crucial networks secure from interference and disruptions, monitoring networks to crackdown on crimes committed on and off these networks- all under the banner of 'Cybersecurity'. However, in the Indian case, exactly what functions come within the sweep of the term 'Cybersecurity' is hard to say, in the absence of definitions. 
+                </p>
+                <p>
+                Some guidance can be found in the IT Act 2000, the National Cyber Security Policy 2013 and disparate ministerial documents. In <dataviz name>, we have tried to map the various agencies implicated in functions covering emergency incident response, indigineous capacity building through research and development and electronic communications surveillance. 
+                </p>
+                <p>
+                (There is assymetry in the level of information available in the public domain about these institutions, even where such institutions have dedicated websites. In several cases, no primary sources are available, but news reports and articles supply the data. The source of information is listed in every case.) 
+                </p>
+              {{/}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script>
+  var Watchtower = {};
+  Watchtower.styles = {
+    institutions: {
+      'Agency': '#58a3a5',
+      'Department': '#add7d8',
+      'Ministry': '#add7d8',
+      'selected': '#f98e00'
+    }
+  }
+
+
+  Watchtower.init = function(data, tabletop) {
+    var watchtower = this;
+    var initData = function(){
+      var sheets = tabletop.sheets();
+      var institutions = sheets["All Institutions (40)"].elements;
+      console.log("init");
+      watchtower.ractive = new Ractive({
+        // The `el` option can be a node, an ID, or a CSS selector.
+        el: '#ractive-container',
+
+        // We could pass in a string, but for the sake of convenience
+        // we're passing the ID of the <script> tag above.
+        template: '#watchtower-app',
+
+        // Here, we're passing in some initial data
+        data: {
+          institutions: institutions,
+          instSelected: false,
+          selectedInst: undefined
+        }
+      });
+      watchtower.map = watchtower.initMap();
+      watchtower.map.on("select", function (params) {
+        console.log('select Event:', params);
+        watchtower.ractive.set('instSelected', true);
+        console.log(params.nodes[0]);
+        console.log(watchtower.ractive.get('institutions').filter(function(inst){
+          return inst['Serial'] === params.nodes[0];
+        }));
+        watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
+          return inst['Serial'] === params.nodes[0];
+        })[0]);
+      });
+      watchtower.map.on("deselectNode", function (params) {
+        watchtower.ractive.set('instSelected', false);
+      });
+    }
+    var tabletop = Tabletop.init({
+      key: 'https://docs.google.com/spreadsheets/d/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/pubhtml',
+      callback: initData
+    });
+  }
+
+  Watchtower.initMap = function(){
+    var institutionNodes = [];
+    var institutionEdges = [];
+    var institutions = Watchtower.ractive.get('institutions');
+    institutions.forEach(function(institution){
+      var instColor = '#f2f2f2';
+      if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
+        instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
+      }
+      institutionNodes.push({
+        id: institution['Serial'],
+        label: institution['Acronym'],
+        color: instColor,
+        font: '12px arial #fff bold',
+        title: institution['Name of Institution'],
+        shape: 'box'
+      });
+
+      if ((institution['Direct control'] === 'NA') && (institution['Partial control'] === 'NA') && (institution['Root'] !== 'NA')) {
+        // Departments
+        console.log(institution);
+        institutionEdges.push({
+          from: institution['Serial'],
+          to: institutions.filter(function(inst){
+            return inst['Acronym'] === institution['Root']
+          })[0]['Serial'],
+          arrows: 'to'
+        });
+      } else {
+        // Match agencies. Ministries will have Direct Control and Partial Control as NA
+        if (institution['Direct control'] !== 'NA') {
+          institutionEdges.push({
+            from: institution['Serial'],
+            to: institutions.filter(function(inst){
+              return inst['Acronym'] === institution['Direct control']
+            })[0]['Serial'],
+            arrows: 'to',
+            color: Watchtower.styles.institutions['Agency']
+          })
+        }
+        if (institution['Partial control'] !== 'NA') {
+          institutionEdges.push({
+            from: institution['Serial'],
+            to: institutions.filter(function(inst){
+              return inst['Acronym'] === institution['Partial control']
+            })[0]['Serial'],
+            arrows: 'to',
+            dashes: true,
+            color: Watchtower.styles.institutions['Agency']
+          })
+        }
+      }
+    });
+    console.log(institutionNodes);
+
+    var nodes = new vis.DataSet(institutionNodes);
+    var edges = new vis.DataSet(institutionEdges);
+    var container = document.getElementById('mynetwork');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+    return new vis.Network(container, data, {});
+  }
+
+  Watchtower.init();
+
+</script>
+
+</body>
+</html>
