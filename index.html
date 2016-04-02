@@ -19,7 +19,8 @@
       background: -webkit-linear-gradient(top,  #ffffff 0%,#fffff2 100%); /* Chrome10-25,Safari5.1-6 */
       background: linear-gradient(to bottom,  #ffffff 0%,#fffff2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fffff2',GradientType=0 ); /* IE6-9 */
-
+      margin:0;
+      padding: 0;
     }
     #mynetwork {
       height: 700px;
@@ -71,6 +72,16 @@
       height: 700px;
       overflow-y: auto;
     }
+    .mod-layout{
+      padding: 0;
+      width: 100%;
+    }
+    .h6{
+      font-size: 16px;
+      margin: 2px 0px 0px 0px;
+      padding: 0px 0px 4px 0px;
+      line-height: 21px;
+     }
   </style>
 </head>
 <body>
@@ -86,35 +97,35 @@
 <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 mod-layout">
         <div id="mynetwork"></div>
         <div id="sidebar">
           <div class="panel panel-default panel-mod">
-            <div class="panel-body sidebar-body sidebar-panel">
+            <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
               {{#selectedInst}}
                 <h2><p class='institutionName'>{{selectedInst['Name of Institution']}}</p></h2>
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['Type tags'] !== 'NA'}}
                   <h5>Institution Type</h5>
-                  <p>{{selectedInst['Type tags']}}</p>
+                  <h6>{{selectedInst['Type tags']}}</h6>
                 {{/if}}
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['Year Started'] !== 'NA'}}
                   <h5>Established In</h5>
-                  <p>{{selectedInst['Year Started']}}</p>
+                  <h6>{{selectedInst['Year Started']}}</h6>
                 {{/if}}
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['Issue tags'] !== 'NA'}}
                   <h5>Issues</h5>
-                  <p>{{selectedInst['Issue tags']}}</p>
+                  <h6>{{selectedInst['Issue tags']}}</h6>
                 {{/if}}
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['RTI?'] !== 'NA'}}
                   <h5>Under RTI?</h5>
-                  <p>{{selectedInst['RTI?']}}</p>
+                  <h6>{{selectedInst['RTI?']}}</h6>
                 {{/if}}
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['Website link'] !== 'NA'}}
                   <h5>URL</h5>
-                  <p>{{selectedInst['Website link']}}</p>
+                  <h6>{{selectedInst['Website link']}}</h6>
                 {{/if}}
                 <h5>Mandate</h5>
-                <p>{{selectedInst['Mandate']}}</p>
+                <h6>{{selectedInst['Mandate']}}</h6>
               {{else}}
                 <p>
                 Insecure information and communication networks are a risk to individuals, to public safety, to the stability of businesses and to the security of nations. Governments assume a big role in keeping crucial and non-crucial networks secure from interference and disruptions, monitoring networks to crackdown on crimes committed on and off these networks- all under the banner of 'Cybersecurity'. However, in the Indian case, exactly what functions come within the sweep of the term 'Cybersecurity' is hard to say, in the absence of definitions.
