@@ -15,6 +15,16 @@
       height: 700px;
       border: 1px solid lightgray;
     }
+    #sidebar {
+      position: absolute;
+      width: 25%;
+      top: 0%;
+      right: 1%;
+    }
+    .sidebar-panel {
+      height: 600px;
+      overflow-y: auto;
+    }
   </style>
 </head>
 <body>
@@ -30,16 +40,14 @@
 <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-9">
+      <div class="col-md-12">
         <div id="mynetwork"></div>
-      </div>
-      <div class="col-md-3">
         <div id="sidebar">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">Watchtower</h3>
             </div>
-            <div class="panel-body">
+            <div class="panel-body sidebar-panel">
               {{#selectedInst}}
                 <h2><p>{{selectedInst['Name of Institution']}}</p></h2>
                 <h5>Institution Type</h5>
@@ -83,7 +91,6 @@
     }
   }
 
-
   Watchtower.init = function(data, tabletop) {
     var watchtower = this;
     var initData = function(){
@@ -116,15 +123,23 @@
         watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
           return inst['Serial'] === params.nodes[0];
         })[0]);
+        Watchtower.sidebar.toggle();
       });
       watchtower.map.on("deselectNode", function (params) {
         watchtower.ractive.set('instSelected', false);
+        Watchtower.sidebar.toggle();
       });
     }
     var tabletop = Tabletop.init({
       key: 'https://docs.google.com/spreadsheets/d/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/pubhtml',
       callback: initData
     });
+  }
+
+  Watchtower.sidebar = {
+    toggle: function(){
+      $("#sidebar").animate({width:'toggle'},350);
+    }
   }
 
   Watchtower.initMap = function(){
@@ -136,14 +151,29 @@
       if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
         instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
       }
-      institutionNodes.push({
-        id: institution['Serial'],
-        label: institution['Acronym'],
-        color: instColor,
-        font: '12px arial #fff bold',
-        title: institution['Name of Institution'],
-        shape: 'box'
-      });
+
+      if (institution['Nature (Agency/Department/Ministry)'] === 'Ministry') {
+        institutionNodes.push({
+          id: institution['Serial'],
+          label: institution['Acronym'],
+          color: instColor,
+          font: '20px arial #000 bold',
+          title: institution['Name of Institution'],
+          shadow:{color:'#2D5150'},
+          image: 'assets/img/ministry.svg',
+          shape: 'image'
+        });
+      } else {
+        institutionNodes.push({
+          id: institution['Serial'],
+          label: institution['Acronym'],
+          color: instColor,
+          font: '12px arial #fff bold',
+          title: institution['Name of Institution'],
+          shape: 'box',
+          shadow:{color:'#2D5150'}
+        });
+      }
 
       if ((institution['Direct control'] === 'NA') && (institution['Partial control'] === 'NA') && (institution['Root'] !== 'NA')) {
         // Departments
@@ -153,7 +183,7 @@
           to: institutions.filter(function(inst){
             return inst['Acronym'] === institution['Root']
           })[0]['Serial'],
-          arrows: 'to'
+          arrows:{to:{scaleFactor:0.25}}
         });
       } else {
         // Match agencies. Ministries will have Direct Control and Partial Control as NA
@@ -163,7 +193,7 @@
             to: institutions.filter(function(inst){
               return inst['Acronym'] === institution['Direct control']
             })[0]['Serial'],
-            arrows: 'to',
+            arrows:{to:{scaleFactor:0.25}},
             color: Watchtower.styles.institutions['Agency']
           })
         }
@@ -173,7 +203,7 @@
             to: institutions.filter(function(inst){
               return inst['Acronym'] === institution['Partial control']
             })[0]['Serial'],
-            arrows: 'to',
+            arrows:{to:{scaleFactor:0.25}},
             dashes: true,
             color: Watchtower.styles.institutions['Agency']
           })
