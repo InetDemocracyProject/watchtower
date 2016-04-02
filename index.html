@@ -2,18 +2,64 @@
 <!doctype html>
 <html>
 <head>
-  <title>Network | Basic usage</title>
+  <title>India's Cyber Watchtower</title>
   <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
   <script src='http://cdn.ractivejs.org/latest/ractive.js'></script>
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700,900' rel='stylesheet' type='text/css'>
   <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
   <script type="text/javascript" src="ext/tabletop.js"></script>
   <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
 
   <style type="text/css">
+    body{
+      font-family: 'Source Sans Pro', sans-serif;
+      background: #ffffff; /* Old browsers */
+      background: -moz-linear-gradient(top,  #ffffff 0%, #fffff2 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #ffffff 0%,#fffff2 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #ffffff 0%,#fffff2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fffff2',GradientType=0 ); /* IE6-9 */
+
+    }
     #mynetwork {
       height: 700px;
-      border: 1px solid lightgray;
+      /*border: 1px solid lightgray;*/
+    }
+    h2{
+      color: #305151;
+    }
+    h5{
+      font-size: 11px;
+      color: #B1B1B1;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      margin-bottom: 0px;
+      margin-top: 17px;
+    }
+    .navbar-mod{
+      background-color: transparent;
+      border: none;
+      position: absolute;
+    }
+    .navbar-brand-mod{
+      color: #305151;
+      font-size: 24px;
+      padding: 25px;
+    }
+    .panel-mod{
+      -webkit-box-shadow: -2px 0px 2px rgba(45,75,76,0.2);
+      box-shadow: -2px 0px 2px rgba(45,75,76,0.2);
+      border: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 340px;
+      border-radius: 0px;
+    }
+    .institutionName{
+      margin-top: -21px;
+      font-size: 24px;
     }
     #sidebar {
       position: absolute;
@@ -22,17 +68,17 @@
       right: 1%;
     }
     .sidebar-panel {
-      height: 600px;
+      height: 700px;
       overflow-y: auto;
     }
   </style>
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-mod">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand" href="/">Watchtower</a>
+      <a class="navbar-brand navbar-brand-mod" style='color: #305151;' href="/">India's Cyber Watchtower</a>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
@@ -43,34 +89,41 @@
       <div class="col-md-12">
         <div id="mynetwork"></div>
         <div id="sidebar">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Watchtower</h3>
-            </div>
-            <div class="panel-body sidebar-panel">
+          <div class="panel panel-default panel-mod">
+            <div class="panel-body sidebar-body sidebar-panel">
               {{#selectedInst}}
-                <h2><p>{{selectedInst['Name of Institution']}}</p></h2>
-                <h5>Institution Type</h5>
-                <p><strong>{{selectedInst['Type tags']}}</strong></p>
-                <h5>Established In</h5>
-                <p><strong>{{selectedInst['Year Started']}}</strong></p>
-                <h5>Issues</h5>
-                <p><strong>{{selectedInst['Issue tags']}}</strong></p>
-                <h5>Under RTI?</h5>
-                <p><strong>{{selectedInst['RTI?']}}</strong></p>
-                <h5>URL</h5>
-                <p><strong>{{selectedInst['Website link']}}</strong></p>
+                <h2><p class='institutionName'>{{selectedInst['Name of Institution']}}</p></h2>
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Type tags'] !== 'NA'}}
+                  <h5>Institution Type</h5>
+                  <p>{{selectedInst['Type tags']}}</p>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Year Started'] !== 'NA'}}
+                  <h5>Established In</h5>
+                  <p>{{selectedInst['Year Started']}}</p>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Issue tags'] !== 'NA'}}
+                  <h5>Issues</h5>
+                  <p>{{selectedInst['Issue tags']}}</p>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['RTI?'] !== 'NA'}}
+                  <h5>Under RTI?</h5>
+                  <p>{{selectedInst['RTI?']}}</p>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Website link'] !== 'NA'}}
+                  <h5>URL</h5>
+                  <p>{{selectedInst['Website link']}}</p>
+                {{/if}}
                 <h5>Mandate</h5>
-                <p><strong>{{selectedInst['Mandate']}}</strong></p>
+                <p>{{selectedInst['Mandate']}}</p>
               {{else}}
                 <p>
-                Insecure information and communication networks are a risk to individuals, to public safety, to the stability of businesses and to the security of nations. Governments assume a big role in keeping crucial and non-crucial networks secure from interference and disruptions, monitoring networks to crackdown on crimes committed on and off these networks- all under the banner of 'Cybersecurity'. However, in the Indian case, exactly what functions come within the sweep of the term 'Cybersecurity' is hard to say, in the absence of definitions. 
+                Insecure information and communication networks are a risk to individuals, to public safety, to the stability of businesses and to the security of nations. Governments assume a big role in keeping crucial and non-crucial networks secure from interference and disruptions, monitoring networks to crackdown on crimes committed on and off these networks- all under the banner of 'Cybersecurity'. However, in the Indian case, exactly what functions come within the sweep of the term 'Cybersecurity' is hard to say, in the absence of definitions.
                 </p>
                 <p>
-                Some guidance can be found in the IT Act 2000, the National Cyber Security Policy 2013 and disparate ministerial documents. In <dataviz name>, we have tried to map the various agencies implicated in functions covering emergency incident response, indigineous capacity building through research and development and electronic communications surveillance. 
+                Some guidance can be found in the IT Act 2000, the National Cyber Security Policy 2013 and disparate ministerial documents. In <dataviz name>, we have tried to map the various agencies implicated in functions covering emergency incident response, indigineous capacity building through research and development and electronic communications surveillance.
                 </p>
                 <p>
-                (There is assymetry in the level of information available in the public domain about these institutions, even where such institutions have dedicated websites. In several cases, no primary sources are available, but news reports and articles supply the data. The source of information is listed in every case.) 
+                (There is assymetry in the level of information available in the public domain about these institutions, even where such institutions have dedicated websites. In several cases, no primary sources are available, but news reports and articles supply the data. The source of information is listed in every case.)
                 </p>
               {{/}}
             </div>
@@ -96,7 +149,6 @@
     var initData = function(){
       var sheets = tabletop.sheets();
       var institutions = sheets["All Institutions"].elements;
-      console.log("init");
       watchtower.ractive = new Ractive({
         // The `el` option can be a node, an ID, or a CSS selector.
         el: '#ractive-container',
@@ -109,25 +161,23 @@
         data: {
           institutions: institutions,
           instSelected: false,
-          selectedInst: undefined
-        }
+          selectedInst: undefined,
+          isMinistryOrDept: function(inst){
+            return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
+          }
+        },
       });
       watchtower.map = watchtower.initMap();
       watchtower.map.on("select", function (params) {
-        console.log('select Event:', params);
         watchtower.ractive.set('instSelected', true);
-        console.log(params.nodes[0]);
-        console.log(watchtower.ractive.get('institutions').filter(function(inst){
-          return inst['Serial'] === params.nodes[0];
-        }));
         watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
           return inst['Serial'] === params.nodes[0];
         })[0]);
-        Watchtower.sidebar.toggle();
+        // Watchtower.sidebar.toggle();
       });
       watchtower.map.on("deselectNode", function (params) {
         watchtower.ractive.set('instSelected', false);
-        Watchtower.sidebar.toggle();
+        // Watchtower.sidebar.toggle();
       });
     }
     var tabletop = Tabletop.init({
@@ -177,7 +227,6 @@
 
       if ((institution['Direct control'] === 'NA') && (institution['Partial control'] === 'NA') && (institution['Root'] !== 'NA')) {
         // Departments
-        console.log(institution);
         institutionEdges.push({
           from: institution['Serial'],
           to: institutions.filter(function(inst){
@@ -210,7 +259,6 @@
         }
       }
     });
-    console.log(institutionNodes);
 
     var nodes = new vis.DataSet(institutionNodes);
     var edges = new vis.DataSet(institutionEdges);
