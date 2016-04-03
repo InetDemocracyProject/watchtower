@@ -79,6 +79,37 @@
       padding: 0;
       width: 100%;
     }
+    #footer-buttons {
+    }
+    .footer-icons{
+      width:30px;
+      height:30px;
+      margin-right: 10px;
+    }
+    .footer-icons:hover{
+      cursor:pointer;
+    }
+    #left-footer{
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 1;
+    }
+    #right-footer{
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 1;
+    }
+    #zoom-buttons{
+      position: absolute;
+      bottom:50px;
+      left: 10px;
+    }
+    .zoom-icons{
+      width:30px;
+      height:30px;
+    }
   </style>
 </head>
 <body>
@@ -93,6 +124,19 @@
 <div id='ractive-container'></div>
 <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
+      <div id='left-footer'>
+        <img class='footer-icons' src="images/filters.svg" alt="Filter the display">
+        <img class='footer-icons' src="images/search.svg" alt="Search for an agency">
+        <img class='footer-icons' src="images/legend.svg" alt="View legend">
+      </div>
+      <div id='right-footer'>
+        <img class='footer-icons' src="images/about.svg" alt="About the visualisation">
+        <img class='footer-icons' src="images/share.svg" alt="Share this">
+      </div>
+      <div id='zoom-buttons'>
+        <img class='zoom-icons' src="images/zoomin.svg" alt="Zoom In">
+        <img class='zoom-icons' src="images/zoomout.svg" alt="Zoom Out">
+      </div>
     <div class="row">
       <div class="col-md-9 mod-layout">
         <div id="mynetwork"></div>
