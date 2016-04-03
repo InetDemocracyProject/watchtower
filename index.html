@@ -37,6 +37,13 @@
       letter-spacing: 0.4px;
       margin-bottom: 0px;
       margin-top: 17px;
+      padding: 0px 15px;
+    }
+    .h6{
+      font-size: 16px;
+      margin: 2px 0px 0px 0px;
+      padding: 0px 15px 4px 15px;
+      line-height: 21px;
     }
     .navbar-mod{
       background-color: transparent;
@@ -61,6 +68,47 @@
     .institutionName{
       margin-top: -21px;
       font-size: 24px;
+      background-color: #F98E00;
+      color: white;
+      padding: 15px;
+    }
+    .panel-body-mod{
+      padding: 0px;
+    }
+    .mod-layout{
+      padding: 0;
+      width: 100%;
+    }
+    #footer-buttons {
+    }
+    .footer-icons{
+      width:30px;
+      height:30px;
+      margin-right: 10px;
+    }
+    .footer-icons:hover{
+      cursor:pointer;
+    }
+    #left-footer{
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 1;
+    }
+    #right-footer{
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 1;
+    }
+    #zoom-buttons{
+      position: absolute;
+      bottom:50px;
+      left: 10px;
+    }
+    .zoom-icons{
+      width:30px;
+      height:30px;
     }
     #sidebar {
       position: absolute;
@@ -96,6 +144,19 @@
 <div id='ractive-container'></div>
 <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
+      <div id='left-footer'>
+        <img class='footer-icons' src="images/filters.svg" alt="Filter the display">
+        <img class='footer-icons' src="images/search.svg" alt="Search for an agency">
+        <img class='footer-icons' src="images/legend.svg" alt="View legend">
+      </div>
+      <div id='right-footer'>
+        <img class='footer-icons' src="images/about.svg" alt="About the visualisation">
+        <img class='footer-icons' src="images/share.svg" alt="Share this">
+      </div>
+      <div id='zoom-buttons'>
+        <img class='zoom-icons' src="images/zoomin.svg" alt="Zoom In">
+        <img class='zoom-icons' src="images/zoomout.svg" alt="Zoom Out">
+      </div>
     <div class="row">
       <div class="col-md-12 mod-layout">
         <div id="mynetwork"></div>
@@ -127,15 +188,15 @@
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
               {{else}}
-                <p> 'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'. 
-                <p> It involves 
+                <p> 'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
+                <p> It involves
                 <ul>
                   <li>the setting up and maintenance of 'information and communication technology' infrastructure for the government</li>
                   <li>protection of critical information infrastructure like the networks of power grids and banks</li>
                   <li>representing the Indian government in global internet governance processes, sharing best practices about security and enhancing cooperation with other countries for better law enforcement</li>
                   <li>conducting research and development to improve indigenous technologies and build capacity</li>
                   <li>as part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil</li>
-                </ul> 
+                </ul>
                 <p>7 ministries with their respective departments and 55 institutions have been mapped
                 </p>
               {{/}}
