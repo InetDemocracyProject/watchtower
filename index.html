@@ -217,8 +217,17 @@
   Watchtower.init = function(data, tabletop) {
     var watchtower = this;
     var initData = function(){
-      var sheets = tabletop.sheets();
-      var institutions = sheets["All Institutions"].elements;
+      watchtower.sheets = tabletop.sheets();
+      var institutions = watchtower.sheets["All Institutions"].elements;
+      var tags = watchtower.sheets['Tags'].elements;
+      var issues = [];
+      var types = [];
+      tags.forEach(function(tag){
+        issues.push({name: tag['Issue Tags'], selected: true});
+        types.push({name: tag['Type Tags'], selected: true});
+      })
+      console.log(issues);
+      console.log(types);
       watchtower.ractive = new Ractive({
         // The `el` option can be a node, an ID, or a CSS selector.
         el: '#ractive-container',
@@ -232,6 +241,8 @@
           institutions: institutions,
           instSelected: false,
           selectedInst: undefined,
+          issues: issues,
+          types: types,
           isMinistryOrDept: function(inst){
             return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
           }
@@ -263,13 +274,69 @@
   }
 
   Watchtower.initMap = function(){
+    var watchtower = this;
     var institutionNodes = [];
     var institutionEdges = [];
     var institutions = Watchtower.ractive.get('institutions');
+
+    var isAgency = function(inst){
+      return inst['Nature (Agency/Department/Ministry)'] === 'Agency';
+    }
+
+    var shouldShowInst = true;
     institutions.forEach(function(institution){
       var instColor = '#f2f2f2';
       if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
         instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
+      }
+
+      if (isAgency(institution)) {
+        // Filters start
+
+        var instIssues = institution['Issue tags'].split(",").map(function(issue){
+          return issue.trim();
+        });
+        var instTypes = institution['Type tags'].split(",").map(function(instType){
+          return instType.trim();
+        });
+        var selectedIssues = watchtower.ractive.get('issues').filter(function(issue){
+          return issue.selected;
+        });
+        var selectedTypes = watchtower.ractive.get('types').filter(function(type){
+          return type.selected;
+        });
+        if (selectedIssues.length && selectedTypes.length) {
+          var isIssuePresent = false
+          selectedIssues.forEach(function(selectedIssue){
+            if (instIssues.indexOf(selectedIssue.name) > -1) {
+              isIssuePresent = true;
+            }
+          });
+          var isTypePresent = false
+          selectedTypes.forEach(function(selectedType){
+            if (instTypes.indexOf(selectedType.name) > -1) {
+              isTypePresent = true;
+            }
+          });
+          console.log(institution['Acronym']);
+          console.log(instIssues);
+          console.log(instTypes);
+          console.log(isIssuePresent);
+          console.log(isTypePresent);
+          shouldShowInst = isIssuePresent && isTypePresent;
+        } else if (selectedIssues.length) {
+          selectedIssues.forEach(function(selectedIssue){
+            if (instIssues.indexOf(selectedIssue.name) === -1) {
+              shouldShowInst = false;
+            }
+          });
+        } else if (selectedTypes.length) {
+          selectedTypes.forEach(function(selectedType){
+            if (instTypes.indexOf(selectedType.name) === -1) {
+              shouldShowInst = false;
+            }
+          });
+        }
       }
 
       if (institution['Nature (Agency/Department/Ministry)'] === 'Ministry') {
@@ -279,7 +346,7 @@
           color: instColor,
           font: '24px arial #000 bold',
           title: institution['Name of Institution'],
-          shadow:{color:'#2D5150'},
+          shadow: {color:'#2D5150'},
           image: 'assets/img/ministry.svg',
           shape: 'image'
         });
@@ -287,7 +354,7 @@
         institutionNodes.push({
           id: institution['Serial'],
           label: institution['Acronym'],
-          color: instColor,
+          color: shouldShowInst ? instColor : "#f2f2f2",
           font: '12px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
