@@ -215,56 +215,70 @@
   }
 
   Watchtower.initMap = function(){
+    var watchtower = this;
     var institutionNodes = [];
     var institutionEdges = [];
     var institutions = Watchtower.ractive.get('institutions');
+
+    var isAgency = function(inst){
+      return inst['Nature (Agency/Department/Ministry)'] === 'Agency';
+    }
+
+    var shouldShowInst = true;
     institutions.forEach(function(institution){
       var instColor = '#f2f2f2';
       if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
         instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
       }
 
-      var instIssues = institution['Issue tags'].split(",").map(function(issue){
-        return issue.replace(" ", "");
-      });
-      var instTypes = institution['Type tags'].split(",").map(function(instType){
-        return instType.replace(" ", "");
-      });
-      var selectedIssues = watchtower.ractive.get('issues').filter(function(issue){
-        return issue.selected;
-      });
-      var selectedTypes = watchtower.ractive.get('types').filter(function(type){
-        return type.selected;
-      });
-      var shouldShowInst = false;
-      if (selectedIssues.length && selectedTypes.length) {
-        var isIssuePresent = false
-        selectedIssues.forEach(function(selectedIssue){
-          if (instTypes.indexOf(selectedIssue) > -1) {
-            isIssuePresent = true;
-          }
-        });
-        var isTypePresent = false
-        selectedTypes.forEach(function(selectedType){
-          if (instTypes.indexOf(selectedType) > -1) {
-            isTypePresent = true;
-          }
-        });
-        shouldShowInst = isIssuePresent && isTypePresent;
-      } else if (selectedIssues.length) {
-        selectedIssues.forEach(function(selectedIssue){
-          if (instIssues.indexOf(selectedIssue) > -1) {
-            shouldShowInst = true;
-          }
-        });
-      } else if (selectedTypes.length) {
-        selectedTypes.forEach(function(selectedType){
-          if (instTypes.indexOf(selectedType) > -1) {
-            shouldShowInst = true;
-          }
-        });
-      }
+      if (isAgency(institution)) {
+        // Filters start
 
+        var instIssues = institution['Issue tags'].split(",").map(function(issue){
+          return issue.trim();
+        });
+        var instTypes = institution['Type tags'].split(",").map(function(instType){
+          return instType.trim();
+        });
+        var selectedIssues = watchtower.ractive.get('issues').filter(function(issue){
+          return issue.selected;
+        });
+        var selectedTypes = watchtower.ractive.get('types').filter(function(type){
+          return type.selected;
+        });
+        if (selectedIssues.length && selectedTypes.length) {
+          var isIssuePresent = false
+          selectedIssues.forEach(function(selectedIssue){
+            if (instIssues.indexOf(selectedIssue.name) > -1) {
+              isIssuePresent = true;
+            }
+          });
+          var isTypePresent = false
+          selectedTypes.forEach(function(selectedType){
+            if (instTypes.indexOf(selectedType.name) > -1) {
+              isTypePresent = true;
+            }
+          });
+          console.log(institution['Acronym']);
+          console.log(instIssues);
+          console.log(instTypes);
+          console.log(isIssuePresent);
+          console.log(isTypePresent);
+          shouldShowInst = isIssuePresent && isTypePresent;
+        } else if (selectedIssues.length) {
+          selectedIssues.forEach(function(selectedIssue){
+            if (instIssues.indexOf(selectedIssue.name) === -1) {
+              shouldShowInst = false;
+            }
+          });
+        } else if (selectedTypes.length) {
+          selectedTypes.forEach(function(selectedType){
+            if (instTypes.indexOf(selectedType.name) === -1) {
+              shouldShowInst = false;
+            }
+          });
+        }
+      }
 
       if (institution['Nature (Agency/Department/Ministry)'] === 'Ministry') {
         institutionNodes.push({
@@ -281,7 +295,7 @@
         institutionNodes.push({
           id: institution['Serial'],
           label: institution['Acronym'],
-          color: instColor,
+          color: shouldShowInst ? instColor : "#f2f2f2",
           font: '12px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
