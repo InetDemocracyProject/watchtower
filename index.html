@@ -195,7 +195,7 @@
         <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'">
       </div>
       <div id='right-footer'>
-        <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'">
+        <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="showSidebar">
         <img class='footer-icons' src="images/share.svg" alt="Share this" onmouseover="this.src='images/share-hover.svg'" onmouseout="this.src='images/share.svg'">
       </div>
       <div id='zoom-buttons'>
@@ -235,7 +235,9 @@
           </div>
         </div>
         <div id="mynetwork"></div>
-        <div id="sidebar">
+
+        <div id="sidebar" {{#if !isSidebarVisible}}class='hidden'{{/if}}>
+          <a href="javascript:void(0);" on-click="closeSidebar">Close</a>
           <div class="panel panel-default panel-mod">
             <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
               {{#selectedInst}}
@@ -327,6 +329,7 @@
           issues: issues,
           types: types,
           exemptFromRTI: false,
+          isSidebarVisible: false,
           isMinistryOrDept: function(inst){
             return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
           }
@@ -363,6 +366,14 @@
         watchtower.initMap();
       });
 
+      watchtower.ractive.on('showSidebar', function(e){
+        watchtower.ractive.set('isSidebarVisible', true);
+      });
+
+      watchtower.ractive.on('closeSidebar', function(e){
+        watchtower.ractive.set('isSidebarVisible', false);
+      });
+
       watchtower.map = watchtower.initMap();
       watchtower.map.on("select", function (params) {
         watchtower.ractive.set('instSelected', true);
@@ -370,10 +381,11 @@
         watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
           return inst['Serial'] === params.nodes[0];
         })[0]);
+        watchtower.ractive.set('isSidebarVisible', true);
         // Watchtower.sidebar.toggle();
       });
       watchtower.map.on("deselectNode", function (params) {
-        watchtower.ractive.set('instSelected', false);
+        watchtower.ractive.set('isSidebarVisible', false);
         // Watchtower.sidebar.toggle();
       });
     }
