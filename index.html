@@ -10,6 +10,7 @@
   <script type="text/javascript" src="ext/tabletop.js"></script>
   <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+  <link rel="shortcut icon" href="https://internetdemocracy.in/wp-content/themes/internet-democracy/_img/favicon.ico"/>
 
   <style type="text/css">
     body{
@@ -138,6 +139,13 @@
     }
     .container-fluid-mod{
       margin-right:0px;
+      padding-right:0px;
+    }
+    #bug-reporting{
+      background-color:#f7f7f7;
+      border-top:1px solid #e8e8e8;
+      margin:15px;
+      padding: 10px;
     }
   </style>
 </head>
@@ -197,6 +205,9 @@
                 {{/if}}
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
+                <div id='bug-reporting'>
+                  <img style='width:20px; height:20px;' src='images/bug.svg'/>&nbsp;<span style='color:#a8a8a8;'>Found incorrect information?</span>&nbsp;<a target='_blank' href='https://docs.google.com/forms/d/1XsPACAHckWwQqUd0M0I4Ld3X7Ssvor8PQABfcyxWWPI/viewform'>Let us know</a>
+                </div>
               {{else}}
                 <img src='images/head.png' style='width:340px;'/>
                 <h6 style='color:#5E3242;'><br/>'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
@@ -289,7 +300,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: instColor,
-          font: '32px arial #000 bold',
+          font: '28px arial #000 bold',
           title: institution['Name of Institution'],
           shadow:{color:'#2D5150'},
           image: 'assets/img/ministry.svg',
