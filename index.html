@@ -39,10 +39,11 @@
       margin-top: 17px;
       padding: 0px 15px;
     }
-    .h6{
+    h6{
       font-size: 16px;
+      padding: 0px 15px;
+      line-height: 22px;
       margin: 2px 0px 0px 0px;
-      padding: 0px 15px 4px 15px;
       line-height: 21px;
     }
     .navbar-mod{
@@ -124,20 +125,17 @@
       padding: 0;
       width: 100%;
     }
-    .h6{
-      font-size: 16px;
-      margin: 2px 0px 0px 0px;
-      padding: 0px 0px 4px 0px;
-      line-height: 21px;
-     }
+    .container-fluid-mod{
+      margin-right:0px;
+    }
   </style>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-mod">
-  <div class="container-fluid">
+  <div class="container-fluid container-fluid-mod">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand navbar-brand-mod" style='color: #305151;' href="/">Watchtower: Mapping India's Cybersecurity Institutions</a>
+      <a class="navbar-brand navbar-brand-mod" style='color: #305151;position: relative;z-index: 9999;' href="/">Watchtower: Mapping India's Cybersecurity Institutions</a>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
@@ -188,17 +186,15 @@
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
               {{else}}
-                <p> 'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
-                <p> It involves
-                <ul>
-                  <li>the setting up and maintenance of 'information and communication technology' infrastructure for the government</li>
-                  <li>protection of critical information infrastructure like the networks of power grids and banks</li>
-                  <li>representing the Indian government in global internet governance processes, sharing best practices about security and enhancing cooperation with other countries for better law enforcement</li>
-                  <li>conducting research and development to improve indigenous technologies and build capacity</li>
-                  <li>as part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil</li>
-                </ul>
-                <p>7 ministries with their respective departments and 55 institutions have been mapped
-                </p>
+                <img src='images/head.png' style='width:340px;'/>
+                <h6> 'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
+                <br/><br/>The issues that these bodies deal with have broadly been grouped into:
+                <br/><br/><b>Infrastructure</b> <br/>The setting up and maintenance of 'information and communication technology' infrastructure for the government
+                <br/><br/><b>Critical Information Infrastructure Protection</b> <br/>Protection of critical information infrastructure like the networks of power grids and banks
+                <br/><br/><b>Global Internet Governance</b> <br/>Representing the Indian government in global internet governance processes, sharing best practices about security and enhancing cooperation with other countries for better law enforcement
+                <br/><br/><b>Research &amp; Development</b> <br/>Conducting research and development to improve indigenous technologies and build capacity
+                <br/><br/><b>Surveillance</b> <br/>As part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil
+                7 ministries with their respective departments and 55 institutions have been mapped</h6>
               {{/}}
             </div>
           </div>
@@ -281,7 +277,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: instColor,
-          font: '20px arial #000 bold',
+          font: '24px arial #000 bold',
           title: institution['Name of Institution'],
           shadow:{color:'#2D5150'},
           image: 'assets/img/ministry.svg',
