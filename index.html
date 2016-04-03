@@ -128,6 +128,12 @@
     .container-fluid-mod{
       margin-right:0px;
     }
+    #filters {
+      position: fixed;
+      top: 12%;
+      left: 24%;
+      z-index: 999999;
+    }
   </style>
 </head>
 <body>
@@ -157,6 +163,34 @@
       </div>
     <div class="row">
       <div class="col-md-12 mod-layout">
+        <div id="filters">
+          <div class="panel panel-default panel-mod">
+            <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
+              <h2>Issues</h2>
+              <dl>
+                {{#issues}}
+                  <dt>
+                    <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleIssuesFilter">
+                    <label  for='{{name}}'>{{name}}</label>
+                  </dt>
+                {{/issues}}
+              </dl>
+              <hr>
+              <h2>Types</h2>
+              <dl>
+              {{#types}}
+                <dt>
+                  <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleTypesFilter">
+                  <label  for='{{name}}'>{{name}}</label>
+                </dt>
+              {{/types}}
+              <h2>RTI?</h2>
+              <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
+              <label  for='{{institution-rti}}'>Bodies exempt from RTI</label>
+              </dl>
+            </div>
+          </div>
+        </div>
         <div id="mynetwork"></div>
         <div id="sidebar">
           <div class="panel panel-default panel-mod">
@@ -207,10 +241,11 @@
   var Watchtower = {};
   Watchtower.styles = {
     institutions: {
-      'Agency': '#58a3a5',
-      'Department': '#add7d8',
+      'Agency': '#1c8481',
+      'Department': '#1c8481',
       'Ministry': '#add7d8',
-      'selected': '#f98e00'
+      'selected': '#f98e00',
+      'dimmed': '#c6c6c6'
     }
   }
 
@@ -223,11 +258,13 @@
       var issues = [];
       var types = [];
       tags.forEach(function(tag){
-        issues.push({name: tag['Issue Tags'], selected: true});
-        types.push({name: tag['Type Tags'], selected: true});
+        if (tag['Issue Tags'] !== '') {
+          issues.push({name: tag['Issue Tags'], selected: true});
+        }
+        if (tag['Type Tags'] !== '') {
+          types.push({name: tag['Type Tags'], selected: true});
+        }
       })
-      console.log(issues);
-      console.log(types);
       watchtower.ractive = new Ractive({
         // The `el` option can be a node, an ID, or a CSS selector.
         el: '#ractive-container',
@@ -243,14 +280,47 @@
           selectedInst: undefined,
           issues: issues,
           types: types,
+          exemptFromRTI: false,
           isMinistryOrDept: function(inst){
             return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
           }
         },
       });
+
+      watchtower.ractive.on('handleIssuesFilter', function(e){
+        var issues = watchtower.ractive.get('issues');
+        issues.forEach(function(issue){
+          if (issue.name === e.context.name) {
+            issue.selected = !e.context.selected;
+          }
+        });
+        watchtower.ractive.set('issues', issues);
+        watchtower.initMap();
+        console.log("toggled");
+      });
+
+      watchtower.ractive.on('handleTypesFilter', function(e){
+        var types = watchtower.ractive.get('types');
+        types.forEach(function(type){
+          if (type.name === e.context.name) {
+            type.selected = !e.context.selected;
+          }
+        });
+        watchtower.ractive.set('types', types);
+        watchtower.initMap();
+        console.log("toggled");
+      });
+
+      watchtower.ractive.on('handleRTIFilter', function(e){
+        console.log(!e.context.exemptFromRTI);
+        watchtower.ractive.set('exemptFromRTI', !e.context.exemptFromRTI);
+        watchtower.initMap();
+      });
+
       watchtower.map = watchtower.initMap();
       watchtower.map.on("select", function (params) {
         watchtower.ractive.set('instSelected', true);
+        console.log(params.nodes[0]);
         watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
           return inst['Serial'] === params.nodes[0];
         })[0]);
@@ -283,16 +353,31 @@
       return inst['Nature (Agency/Department/Ministry)'] === 'Agency';
     }
 
-    var shouldShowInst = true;
+    var isMinistry = function(inst){
+      return inst['Nature (Agency/Department/Ministry)'] === 'Ministry';
+    }
+
     institutions.forEach(function(institution){
-      var instColor = '#f2f2f2';
+      var instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
       if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
         instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
       }
 
-      if (isAgency(institution)) {
+      if (isMinistry(institution)) {
+        institutionNodes.push({
+          id: institution['Serial'],
+          label: institution['Acronym'],
+          color: instColor,
+          font: '24px arial #000 bold',
+          title: institution['Name of Institution'],
+          shadow: {color:'#2D5150'},
+          image: 'assets/img/ministry.svg',
+          shape: 'image'
+        });
+      } else if (isAgency(institution)) {
         // Filters start
 
+        var shouldShowInst = true;
         var instIssues = institution['Issue tags'].split(",").map(function(issue){
           return issue.trim();
         });
@@ -318,11 +403,6 @@
               isTypePresent = true;
             }
           });
-          console.log(institution['Acronym']);
-          console.log(instIssues);
-          console.log(instTypes);
-          console.log(isIssuePresent);
-          console.log(isTypePresent);
           shouldShowInst = isIssuePresent && isTypePresent;
         } else if (selectedIssues.length) {
           selectedIssues.forEach(function(selectedIssue){
@@ -337,42 +417,22 @@
             }
           });
         }
-      }
 
-      if (institution['Nature (Agency/Department/Ministry)'] === 'Ministry') {
+        if (watchtower.ractive.get('exemptFromRTI')){
+          shouldShowInst = shouldShowInst && institution['RTI?'] === 'Yes';
+        }
+
         institutionNodes.push({
           id: institution['Serial'],
           label: institution['Acronym'],
-          color: instColor,
-          font: '24px arial #000 bold',
-          title: institution['Name of Institution'],
-          shadow: {color:'#2D5150'},
-          image: 'assets/img/ministry.svg',
-          shape: 'image'
-        });
-      } else {
-        institutionNodes.push({
-          id: institution['Serial'],
-          label: institution['Acronym'],
-          color: shouldShowInst ? instColor : "#f2f2f2",
+          color: shouldShowInst ? instColor : Watchtower.styles.institutions.dimmed,
           font: '12px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
           shadow:{color:'#2D5150'}
         });
-      }
 
-      if ((institution['Direct control'] === 'NA') && (institution['Partial control'] === 'NA') && (institution['Root'] !== 'NA')) {
-        // Departments
-        institutionEdges.push({
-          from: institution['Serial'],
-          to: institutions.filter(function(inst){
-            return inst['Acronym'] === institution['Root']
-          })[0]['Serial'],
-          arrows:{to:{scaleFactor:0.25}}
-        });
-      } else {
-        // Match agencies. Ministries will have Direct Control and Partial Control as NA
+        // Ministries will have Direct Control and Partial Control as NA
         if (institution['Direct control'] !== 'NA') {
           institutionEdges.push({
             from: institution['Serial'],
@@ -393,6 +453,27 @@
             dashes: true,
             color: Watchtower.styles.institutions['Agency']
           })
+        }
+      } else {
+        // Departments
+        console.log(institution);
+        institutionNodes.push({
+          id: institution['Serial'],
+          label: institution['Acronym'],
+          color: instColor,
+          font: '12px arial #fff bold',
+          title: institution['Name of Institution'],
+          shape: 'box',
+          shadow:{color:'#2D5150'}
+        });
+        if (institution['Root'] !== 'NA') {
+          institutionEdges.push({
+            from: institution['Serial'],
+            to: institutions.filter(function(inst){
+              return inst['Acronym'] === institution['Root']
+            })[0]['Serial'],
+            arrows:{to:{scaleFactor:0.25}}
+          });
         }
       }
     });
