@@ -88,6 +88,7 @@
       height:30px;
       margin-right: 10px;
       transition: 0.3s;
+      z-index:99999;
     }
     .footer-icons:hover{
       cursor:pointer;
@@ -130,7 +131,7 @@
       right: 1%;
     }
     .sidebar-panel {
-      height: 700px;
+      height: 610px;
       overflow-y: auto;
     }
     .mod-layout{
@@ -149,9 +150,29 @@
     }
     #filters {
       position: fixed;
-      top: 12%;
-      left: 24%;
+      bottom: 45px;
+      left: 65px;
       z-index: 999999;
+    }
+    .filter-label-class{
+      margin-left: 5px;
+      font-weight: 400;
+    }
+    .filter-panel-mod{
+      padding:15px;
+      height:610px;
+      margin-bottom: 0px;
+    }
+    .filter-label-mod{
+      padding: 0px 0px 10px 0px;
+      font-weight: 600;
+    }
+    .hr-mod{
+      margin:10px 0px;
+      padding:0;
+    }
+    .dl-mod{
+      margin:0px;
     }
   </style>
 </head>
@@ -160,8 +181,8 @@
   <div class="container-fluid container-fluid-mod">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand navbar-brand-mod" style='color:#5E3242;position:relative;z-index:9999;' href="/">Watchtower</a>
-      <h6 style='color:#5E3242;clear:both;padding:0px 8px;z-index:9999;'>Mapping India's Cybersecurity Institutions</h6>
+      <a class="navbar-brand navbar-brand-mod" style='color:#5E3242;position:relative;z-index:9999;' href="/">The Watchtower</a>
+      <h6 style='color:#5E3242;clear:both;padding:0px 8px;z-index:9999;'>Mapping the Indian Government's Cyber Security Institutions</h6>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
@@ -184,29 +205,31 @@
     <div class="row">
       <div class="col-md-12 mod-layout">
         <div id="filters">
-          <div class="panel panel-default panel-mod">
+          <div class="panel panel-default filter-panel-mod">
             <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
-              <h2>Issues</h2>
-              <dl>
+            <h5 style='margin: 0px 0px 10px 0px;padding: 0px;'>FILTERS</h5>
+              <h6 class='filter-label-mod'>Issues looked into</h6>
+              <dl class='dl-mod'>
                 {{#issues}}
                   <dt>
                     <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleIssuesFilter">
-                    <label  for='{{name}}'>{{name}}</label>
+                    <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
                   </dt>
                 {{/issues}}
               </dl>
-              <hr>
-              <h2>Types</h2>
+              <hr class='hr-mod'>
+              <h6 class='filter-label-mod'>Type of body</h6>
               <dl>
               {{#types}}
                 <dt>
                   <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleTypesFilter">
-                  <label  for='{{name}}'>{{name}}</label>
+                  <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
                 </dt>
               {{/types}}
-              <h2>RTI?</h2>
+              <hr class='hr-mod'>
+              <h6 class='filter-label-mod'>RTI?</h6>
               <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
-              <label  for='{{institution-rti}}'>Bodies exempt from RTI</label>
+              <label  for='{{institution-rti}}' class='filter-label-class'>Bodies exempt from RTI</label>
               </dl>
             </div>
           </div>
