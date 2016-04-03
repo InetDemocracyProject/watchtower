@@ -86,13 +86,14 @@
       width:30px;
       height:30px;
       margin-right: 10px;
+      transition: 0.3s;
     }
     .footer-icons:hover{
       cursor:pointer;
     }
     #left-footer{
       position: absolute;
-      left: 10px;
+      left: 70px;
       bottom: 10px;
       z-index: 1;
     }
@@ -102,14 +103,24 @@
       bottom: 10px;
       z-index: 1;
     }
-    #zoom-buttons{
+    #zoom-buttons {
       position: absolute;
-      bottom:50px;
-      left: 10px;
+      bottom: 10px;
+      left: 13px;
+      width: 40px;
+      padding: 5px;
+      border-radius: 20px;
+      background-color: white;
+      box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
+      z-index: 9999;
     }
     .zoom-icons{
       width:30px;
       height:30px;
+      z-index:10000;
+    }
+    .zoom-icons:hover{
+      cursor:pointer;
     }
     #sidebar {
       position: absolute;
@@ -135,7 +146,8 @@
   <div class="container-fluid container-fluid-mod">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand navbar-brand-mod" style='color: #305151;position: relative;z-index: 9999;' href="/">Watchtower: Mapping India's Cybersecurity Institutions</a>
+      <a class="navbar-brand navbar-brand-mod" style='color:#5E3242;position:relative;z-index:9999;' href="/">Watchtower</a>
+      <h6 style='color:#5E3242;clear:both;padding:0px 8px;z-index:9999;'>Mapping India's Cybersecurity Institutions</h6>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
@@ -143,17 +155,17 @@
 <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
       <div id='left-footer'>
-        <img class='footer-icons' src="images/filters.svg" alt="Filter the display">
-        <img class='footer-icons' src="images/search.svg" alt="Search for an agency">
-        <img class='footer-icons' src="images/legend.svg" alt="View legend">
+        <img class='footer-icons' src="images/filters.svg" alt="Filter the display" onmouseover="this.src='images/filters-hover.svg'" onmouseout="this.src='images/filters.svg'">
+        <img class='footer-icons' src="images/search.svg" alt="Search for an agency" onmouseover="this.src='images/search-hover.svg'" onmouseout="this.src='images/search.svg'">
+        <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'">
       </div>
       <div id='right-footer'>
-        <img class='footer-icons' src="images/about.svg" alt="About the visualisation">
-        <img class='footer-icons' src="images/share.svg" alt="Share this">
+        <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'">
+        <img class='footer-icons' src="images/share.svg" alt="Share this" onmouseover="this.src='images/share-hover.svg'" onmouseout="this.src='images/share.svg'">
       </div>
       <div id='zoom-buttons'>
-        <img class='zoom-icons' src="images/zoomin.svg" alt="Zoom In">
-        <img class='zoom-icons' src="images/zoomout.svg" alt="Zoom Out">
+        <img class='zoom-icons' src="images/zoomin.svg" alt="Zoom In" onmouseover="this.src='images/zoomin-hover.svg'" onmouseout="this.src='images/zoomin.svg'">
+        <img class='zoom-icons' src="images/zoomout.svg" alt="Zoom Out" onmouseover="this.src='images/zoomout-hover.svg'" onmouseout="this.src='images/zoomout.svg'">
       </div>
     <div class="row">
       <div class="col-md-12 mod-layout">
@@ -187,7 +199,7 @@
                 <h6>{{selectedInst['Mandate']}}</h6>
               {{else}}
                 <img src='images/head.png' style='width:340px;'/>
-                <h6> 'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
+                <h6 style='color:#5E3242;'><br/>'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
                 <br/><br/>The issues that these bodies deal with have broadly been grouped into:
                 <br/><br/><b>Infrastructure</b> <br/>The setting up and maintenance of 'information and communication technology' infrastructure for the government
                 <br/><br/><b>Critical Information Infrastructure Protection</b> <br/>Protection of critical information infrastructure like the networks of power grids and banks
@@ -277,7 +289,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: instColor,
-          font: '24px arial #000 bold',
+          font: '32px arial #000 bold',
           title: institution['Name of Institution'],
           shadow:{color:'#2D5150'},
           image: 'assets/img/ministry.svg',
