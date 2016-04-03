@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>India's Cyber Watchtower</title>
+  <title>Watchtower: Mapping India's Cybersecurity Institutions</title>
   <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
   <script src='http://cdn.ractivejs.org/latest/ractive.js'></script>
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700,900' rel='stylesheet' type='text/css'>
@@ -110,6 +110,26 @@
       width:30px;
       height:30px;
     }
+    #sidebar {
+      position: absolute;
+      width: 25%;
+      top: 0%;
+      right: 1%;
+    }
+    .sidebar-panel {
+      height: 700px;
+      overflow-y: auto;
+    }
+    .mod-layout{
+      padding: 0;
+      width: 100%;
+    }
+    .h6{
+      font-size: 16px;
+      margin: 2px 0px 0px 0px;
+      padding: 0px 0px 4px 0px;
+      line-height: 21px;
+     }
   </style>
 </head>
 <body>
@@ -117,7 +137,7 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand navbar-brand-mod" style='color: #305151;' href="/">India's Cyber Watchtower</a>
+      <a class="navbar-brand navbar-brand-mod" style='color: #305151;' href="/">Watchtower: Mapping India's Cybersecurity Institutions</a>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
@@ -138,39 +158,46 @@
         <img class='zoom-icons' src="images/zoomout.svg" alt="Zoom Out">
       </div>
     <div class="row">
-      <div class="col-md-9 mod-layout">
+      <div class="col-md-12 mod-layout">
         <div id="mynetwork"></div>
-      </div>
-      <div class="col-md-3">
         <div id="sidebar">
           <div class="panel panel-default panel-mod">
-            <!--<div class="panel-heading">
-              <h3 class="panel-title">Watchtower</h3>
-            </div> -->
-            <div class="panel-body panel-body-mod">
+            <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
               {{#selectedInst}}
                 <h2><p class='institutionName'>{{selectedInst['Name of Institution']}}</p></h2>
-                <h5>Institution Type</h5>
-                <h6>{{selectedInst['Type tags']}}</h6>
-                <h5>Established In</h5>
-                <h6>{{selectedInst['Year Started']}}</h6>
-                <h5>Issues</h5>
-                <h6>{{selectedInst['Issue tags']}}</h6>
-                <h5>Under RTI?</h5>
-                <h6>{{selectedInst['RTI?']}}</h6>
-                <h5>URL</h5>
-                <h6>{{selectedInst['Website link']}}</h6>
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Type tags'] !== 'NA'}}
+                  <h5>Institution Type</h5>
+                  <h6>{{selectedInst['Type tags']}}</h6>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Year Started'] !== 'NA'}}
+                  <h5>Established In</h5>
+                  <h6>{{selectedInst['Year Started']}}</h6>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Issue tags'] !== 'NA'}}
+                  <h5>Issues</h5>
+                  <h6>{{selectedInst['Issue tags']}}</h6>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['RTI?'] !== 'NA'}}
+                  <h5>Under RTI?</h5>
+                  <h6>{{selectedInst['RTI?']}}</h6>
+                {{/if}}
+                {{#if !isMinistryOrDept(selectedInst) || selectedInst['Website link'] !== 'NA'}}
+                  <h5>URL</h5>
+                  <h6>{{selectedInst['Website link']}}</h6>
+                {{/if}}
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
               {{else}}
-                <p>
-                Insecure information and communication networks are a risk to individuals, to public safety, to the stability of businesses and to the security of nations. Governments assume a big role in keeping crucial and non-crucial networks secure from interference and disruptions, monitoring networks to crackdown on crimes committed on and off these networks- all under the banner of 'Cybersecurity'. However, in the Indian case, exactly what functions come within the sweep of the term 'Cybersecurity' is hard to say, in the absence of definitions.
-                </p>
-                <p>
-                Some guidance can be found in the IT Act 2000, the National Cyber Security Policy 2013 and disparate ministerial documents. In <dataviz name>, we have tried to map the various agencies implicated in functions covering emergency incident response, indigineous capacity building through research and development and electronic communications surveillance.
-                </p>
-                <p>
-                (There is assymetry in the level of information available in the public domain about these institutions, even where such institutions have dedicated websites. In several cases, no primary sources are available, but news reports and articles supply the data. The source of information is listed in every case.)
+                <p> 'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
+                <p> It involves
+                <ul>
+                  <li>the setting up and maintenance of 'information and communication technology' infrastructure for the government</li>
+                  <li>protection of critical information infrastructure like the networks of power grids and banks</li>
+                  <li>representing the Indian government in global internet governance processes, sharing best practices about security and enhancing cooperation with other countries for better law enforcement</li>
+                  <li>conducting research and development to improve indigenous technologies and build capacity</li>
+                  <li>as part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil</li>
+                </ul>
+                <p>7 ministries with their respective departments and 55 institutions have been mapped
                 </p>
               {{/}}
             </div>
@@ -191,13 +218,11 @@
     }
   }
 
-
   Watchtower.init = function(data, tabletop) {
     var watchtower = this;
     var initData = function(){
       var sheets = tabletop.sheets();
       var institutions = sheets["All Institutions"].elements;
-      console.log("init");
       watchtower.ractive = new Ractive({
         // The `el` option can be a node, an ID, or a CSS selector.
         el: '#ractive-container',
@@ -210,29 +235,35 @@
         data: {
           institutions: institutions,
           instSelected: false,
-          selectedInst: undefined
-        }
+          selectedInst: undefined,
+          isMinistryOrDept: function(inst){
+            return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
+          }
+        },
       });
       watchtower.map = watchtower.initMap();
       watchtower.map.on("select", function (params) {
-        console.log('select Event:', params);
         watchtower.ractive.set('instSelected', true);
-        console.log(params.nodes[0]);
-        console.log(watchtower.ractive.get('institutions').filter(function(inst){
-          return inst['Serial'] === params.nodes[0];
-        }));
         watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
           return inst['Serial'] === params.nodes[0];
         })[0]);
+        // Watchtower.sidebar.toggle();
       });
       watchtower.map.on("deselectNode", function (params) {
         watchtower.ractive.set('instSelected', false);
+        // Watchtower.sidebar.toggle();
       });
     }
     var tabletop = Tabletop.init({
       key: 'https://docs.google.com/spreadsheets/d/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/pubhtml',
       callback: initData
     });
+  }
+
+  Watchtower.sidebar = {
+    toggle: function(){
+      $("#sidebar").animate({width:'toggle'},350);
+    }
   }
 
   Watchtower.initMap = function(){
@@ -244,24 +275,38 @@
       if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
         instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
       }
-      institutionNodes.push({
-        id: institution['Serial'],
-        label: institution['Acronym'],
-        color: instColor,
-        font: '12px arial #fff bold',
-        title: institution['Name of Institution'],
-        shape: 'box'
-      });
+
+      if (institution['Nature (Agency/Department/Ministry)'] === 'Ministry') {
+        institutionNodes.push({
+          id: institution['Serial'],
+          label: institution['Acronym'],
+          color: instColor,
+          font: '20px arial #000 bold',
+          title: institution['Name of Institution'],
+          shadow:{color:'#2D5150'},
+          image: 'assets/img/ministry.svg',
+          shape: 'image'
+        });
+      } else {
+        institutionNodes.push({
+          id: institution['Serial'],
+          label: institution['Acronym'],
+          color: instColor,
+          font: '12px arial #fff bold',
+          title: institution['Name of Institution'],
+          shape: 'box',
+          shadow:{color:'#2D5150'}
+        });
+      }
 
       if ((institution['Direct control'] === 'NA') && (institution['Partial control'] === 'NA') && (institution['Root'] !== 'NA')) {
         // Departments
-        console.log(institution);
         institutionEdges.push({
           from: institution['Serial'],
           to: institutions.filter(function(inst){
             return inst['Acronym'] === institution['Root']
           })[0]['Serial'],
-          arrows: 'to'
+          arrows:{to:{scaleFactor:0.25}}
         });
       } else {
         // Match agencies. Ministries will have Direct Control and Partial Control as NA
@@ -271,7 +316,7 @@
             to: institutions.filter(function(inst){
               return inst['Acronym'] === institution['Direct control']
             })[0]['Serial'],
-            arrows: 'to',
+            arrows:{to:{scaleFactor:0.25}},
             color: Watchtower.styles.institutions['Agency']
           })
         }
@@ -281,14 +326,13 @@
             to: institutions.filter(function(inst){
               return inst['Acronym'] === institution['Partial control']
             })[0]['Serial'],
-            arrows: 'to',
+            arrows:{to:{scaleFactor:0.25}},
             dashes: true,
             color: Watchtower.styles.institutions['Agency']
           })
         }
       }
     });
-    console.log(institutionNodes);
 
     var nodes = new vis.DataSet(institutionNodes);
     var edges = new vis.DataSet(institutionEdges);
