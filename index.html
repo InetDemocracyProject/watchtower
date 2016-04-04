@@ -13,6 +13,9 @@
   <link rel="shortcut icon" href="https://internetdemocracy.in/wp-content/themes/internet-democracy/_img/favicon.ico"/>
 
   <style type="text/css">
+    html {
+      height: 100%;
+    }
     body{
       font-family: 'Source Sans Pro', sans-serif;
       background: #ffffff; /* Old browsers */
@@ -22,6 +25,7 @@
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fffff2',GradientType=0 ); /* IE6-9 */
       margin:0;
       padding: 0;
+      height: 100%;
     }
     #mynetwork {
       height: 100vh;
@@ -124,6 +128,54 @@
     .zoom-icons:hover{
       cursor:pointer;
     }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
+      background-image: url("images/zoomin.svg");
+/*      bottom: 10px;
+      right: 15px;
+*/      position: absolute;
+      bottom: 45px;
+      left: 13px;
+      width: 40px;
+      padding: 5px;
+      border-radius: 20px;
+      background-color: white;
+      box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
+      z-index: 9999;
+    }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
+      background-image: url("images/zoomout.svg");
+      bottom: 8px;
+      left: 13px;
+      width: 40px;
+      padding: 5px;
+      border-radius: 20px;
+      background-color: white;
+      box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
+      z-index: 9999;
+    }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-up {
+      display: none;
+    }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-down {
+      display: none;
+    }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-left {
+      display: none;
+    }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-right {
+      display: none;
+    }
+
+    div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+      display: none; 
+    }
+
     #sidebar {
       position: absolute;
       width: 25%;
@@ -148,10 +200,18 @@
       margin:15px;
       padding: 10px;
     }
-    #filters {
+
+/*    #filters {
       position: fixed;
       bottom: 45px;
       left: 65px;
+      z-index: 999999;
+    }
+*/
+    #filters {
+      position: fixed;
+      top: 11%;
+      left: 5%;
       z-index: 999999;
     }
     .filter-label-class{
@@ -227,10 +287,6 @@
       <div id='right-footer'>
         <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="toggleSidebar">
         <img class='footer-icons' src="images/share.svg" alt="Share this" onmouseover="this.src='images/share-hover.svg'" onmouseout="this.src='images/share.svg'">
-      </div>
-      <div id='zoom-buttons'>
-        <img class='zoom-icons' src="images/zoomin.svg" alt="Zoom In" onmouseover="this.src='images/zoomin-hover.svg'" onmouseout="this.src='images/zoomin.svg'">
-        <img class='zoom-icons' src="images/zoomout.svg" alt="Zoom Out" onmouseover="this.src='images/zoomout-hover.svg'" onmouseout="this.src='images/zoomout.svg'">
       </div>
     <div class="row">
       <div class="col-md-12 mod-layout">
@@ -520,7 +576,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: shouldShowInst ? instColor : Watchtower.styles.institutions.dimmed,
-          font: '24px arial #fff bold',
+          font: '22px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
           shadow:{color:'#2D5150'}
@@ -579,7 +635,14 @@
       nodes: nodes,
       edges: edges
     };
-    var options = {layout:{randomSeed:3}};
+    var options = {
+      layout:{
+        randomSeed:3
+      },
+      interaction: {
+        navigationButtons: true
+      }
+    };
     return new vis.Network(container, data, options);
   }
 
