@@ -543,7 +543,8 @@
       nodes: nodes,
       edges: edges
     };
-    return new vis.Network(container, data, {});
+    var options = {layout:{randomSeed:2}};
+    return new vis.Network(container, data, options);
   }
 
   Watchtower.init();
