@@ -24,7 +24,7 @@
       padding: 0;
     }
     #mynetwork {
-      height: 700px;
+      height: 100vh;
       /*border: 1px solid lightgray;*/
     }
     h2{
@@ -174,6 +174,22 @@
     .dl-mod{
       margin:0px;
     }
+    .legend-panel-mod{
+      position: absolute;
+      z-index: 9999999;
+      bottom: 25px;
+      left: 150px;
+      padding:15px;
+    }
+    .legend-icons{
+      width:20px;
+      height:20px;
+    }
+    .mp-correction{
+      margin: 0px 0px 10px 0px;
+      padding: 0px;
+      margin-right: 10px;
+    }
   </style>
 </head>
 <body>
@@ -182,20 +198,34 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand navbar-brand-mod" style='color:#5E3242;position:relative;z-index:9999;' href="/">The Watchtower</a>
-      <h6 style='color:#5E3242;clear:both;padding:0px 8px;z-index:9999;'>Mapping the Indian Government's Cyber Security Institutions</h6>
+      <h6 style='color:#5E3242;clear:both;padding:0px 10px;z-index:9999;'>Mapping the Indian Government's Cyber Security Institutions</h6>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
 <div id='ractive-container'></div>
-<script id='watchtower-app' type='text/ractive'>
+  <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
+  <div id='legend' {{#if isLegendVisible}}class="panel panel-default legend-panel-mod"}}{{else}}class='panel panel-default legend-panel-mod hidden'{{/if}}>
+    <h5 class='mp-correction'>LEGEND</h5>
+    <table>
+    <tr>
+      <td><img class='legend-icons' src='images/direct-legend.svg'/></td><td>Under direct control of</td>
+    </tr>
+    <tr>
+      <td><img class='legend-icons' src='images/administrative-legend.svg'/></td><td>Under administrative control of</td>
+    </tr>
+    <tr>
+      <td><img class='legend-icons' src='images/ministry-legend.svg'/></td><td>Ministry</td>
+    </tr>
+    </table>
+  </div>
       <div id='left-footer'>
-        <img class='footer-icons' src="images/filters.svg" alt="Filter the display" onmouseover="this.src='images/filters-hover.svg'" onmouseout="this.src='images/filters.svg'">
+        <img class='footer-icons' src="images/filters.svg" alt="Filter the display" onmouseover="this.src='images/filters-hover.svg'" onmouseout="this.src='images/filters.svg'"  on-click="toggleFilters">
         <img class='footer-icons' src="images/search.svg" alt="Search for an agency" onmouseover="this.src='images/search-hover.svg'" onmouseout="this.src='images/search.svg'">
-        <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'">
+        <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'"  on-click="toggleLegend">
       </div>
       <div id='right-footer'>
-        <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="showSidebar">
+        <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="toggleSidebar">
         <img class='footer-icons' src="images/share.svg" alt="Share this" onmouseover="this.src='images/share-hover.svg'" onmouseout="this.src='images/share.svg'">
       </div>
       <div id='zoom-buttons'>
@@ -204,10 +234,10 @@
       </div>
     <div class="row">
       <div class="col-md-12 mod-layout">
-        <div id="filters">
+        <div id="filters" {{#if !isFiltersVisible}}class='hidden'{{/if}}>
           <div class="panel panel-default filter-panel-mod">
             <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
-            <h5 style='margin: 0px 0px 10px 0px;padding: 0px;'>FILTERS</h5>
+            <h5 class='mp-correction'>FILTERS</h5>
               <h6 class='filter-label-mod'>Issues looked into</h6>
               <dl class='dl-mod'>
                 {{#issues}}
@@ -330,6 +360,8 @@
           types: types,
           exemptFromRTI: false,
           isSidebarVisible: false,
+          isFiltersVisible: false,
+          isLegendVisible: false,
           isMinistryOrDept: function(inst){
             return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
           }
@@ -366,12 +398,16 @@
         watchtower.initMap();
       });
 
-      watchtower.ractive.on('showSidebar', function(e){
-        watchtower.ractive.set('isSidebarVisible', true);
+      watchtower.ractive.on('toggleSidebar', function(e){
+        watchtower.ractive.set('isSidebarVisible', !watchtower.ractive.get('isSidebarVisible'));
       });
 
-      watchtower.ractive.on('closeSidebar', function(e){
-        watchtower.ractive.set('isSidebarVisible', false);
+      watchtower.ractive.on('toggleFilters', function(e){
+        watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
+      });
+
+      watchtower.ractive.on('toggleLegend', function(e){
+        watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
       });
 
       watchtower.map = watchtower.initMap();
@@ -426,7 +462,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: instColor,
-          font: '28px arial #000 bold',
+          font: '27px arial #000 bold',
           title: institution['Name of Institution'],
           shadow: {color:'#2D5150'},
           image: 'images/ministry.png',
@@ -484,7 +520,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: shouldShowInst ? instColor : Watchtower.styles.institutions.dimmed,
-          font: '12px arial #fff bold',
+          font: '24px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
           shadow:{color:'#2D5150'}
@@ -519,7 +555,7 @@
           id: institution['Serial'],
           label: institution['Acronym'],
           color: instColor,
-          font: '12px arial #fff bold',
+          font: '24px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
           shadow:{color:'#2D5150'}
