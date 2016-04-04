@@ -507,6 +507,18 @@
       return inst['Nature (Agency/Department/Ministry)'] === 'Ministry';
     }
 
+    // empty GoI node to get the ministries into a huddle
+    institutionNodes.push({
+      id: "0",
+      label: "GOI",
+      color: '#fff',
+      font: '2px arial #fff bold',
+      // title: "GOI",
+      // shadow: {color:'#2D5150'},
+      shape: 'text'
+    });
+
+
     institutions.forEach(function(institution){
       var instColor = Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']];
       if (Watchtower.styles.institutions[institution['Nature (Agency/Department/Ministry)']]) {
@@ -524,6 +536,14 @@
           image: 'images/ministry.png',
           shape: 'image'
         });
+        // dummy edges to get the ministries to huddle
+        institutionEdges.push({
+          from: institution['Serial'],
+          to: "0",
+          arrows:{to:{scaleFactor:0.25}},
+          color: '#fff'
+        })
+
       } else if (isAgency(institution)) {
         // Filters start
 
@@ -637,7 +657,7 @@
     };
     var options = {
       layout:{
-        randomSeed:3
+        randomSeed:1
       },
       interaction: {
         navigationButtons: true
