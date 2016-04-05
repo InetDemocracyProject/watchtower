@@ -70,6 +70,8 @@
       right: 0;
       width: 340px;
       border-radius: 0px;
+      margin-bottom: 0px;
+      z-index:2;
     }
     .institutionName{
       margin-top: -21px;
@@ -111,8 +113,8 @@
     }
     #zoom-buttons {
       position: absolute;
-      bottom: 10px;
-      left: 13px;
+      top: 90px;
+      left: 25px;
       width: 40px;
       padding: 5px;
       border-radius: 20px;
@@ -183,7 +185,7 @@
       right: 1%;
     }
     .sidebar-panel {
-      height: 610px;
+      height: 100vh;
       overflow-y: auto;
     }
     .mod-layout{
@@ -206,6 +208,16 @@
       bottom: 45px;
       left: 65px;
       z-index: 999999;
+      width:592px;
+    }
+    #filters-left{
+      float: left;
+      margin-right: 20px;
+      border-right: 1px solid #E6E6E6;
+      padding-right: 20px;
+    }
+    #filters-right{
+
     }
 */
     #filters {
@@ -218,9 +230,13 @@
       margin-left: 5px;
       font-weight: 400;
     }
+    .filter-label-class:hover{
+      background: rgba(0,0,0,0.1);
+      cursor:pointer;
+    }
     .filter-panel-mod{
       padding:15px;
-      height:610px;
+      height:330px;
       margin-bottom: 0px;
     }
     .filter-label-mod{
@@ -234,12 +250,31 @@
     .dl-mod{
       margin:0px;
     }
+    #legend{
+      position: absolute;
+      z-index: 9999999;
+      bottom: 45px;
+      left: 150px;
+      padding:15px;
+      background-color: #fff;
+      border-radius: 4px;
+      -webkit-box-shadow: -2px 0px 2px rgba(45,75,76,0.2);
+      box-shadow: -2px 0px 2px rgba(45,75,76,0.2);
+      margin-bottom: 0px;
+      border-color: #ddd;
+      border: 1px solid transparent;
+    }
     .legend-panel-mod{
       position: absolute;
       z-index: 9999999;
-      bottom: 25px;
+      bottom: 45px;
       left: 150px;
       padding:15px;
+      background-color: #fff;
+      border-radius: 4px;
+      -webkit-box-shadow: -2px 0px 2px rgba(45,75,76,0.2);
+      box-shadow: -2px 0px 2px rgba(45,75,76,0.2);
+      margin-bottom: 0px;
     }
     .legend-icons{
       width:20px;
@@ -250,9 +285,33 @@
       padding: 0px;
       margin-right: 10px;
     }
+    .close-position{
+      position: relative;
+      z-index: 999;
+      height: 30px;
+      right: 23px;
+      top: 10px;
+    }
+    .filter-close-position{
+      position: absolute;
+      z-index: 999;
+      height: 30px;
+      right: 10px;
+      top: 10px;
+      overflow: visible;
+      opacity: 0.6;
+    }
   </style>
 </head>
 <body>
+  <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <nav class="navbar navbar-default navbar-mod">
   <div class="container-fluid container-fluid-mod">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -264,21 +323,7 @@
 </nav>
 <div id='ractive-container'></div>
   <script id='watchtower-app' type='text/ractive'>
-  <div class="container-fluid">
-  <div id='legend' {{#if isLegendVisible}}class="panel panel-default legend-panel-mod"}}{{else}}class='panel panel-default legend-panel-mod hidden'{{/if}}>
-    <h5 class='mp-correction'>LEGEND</h5>
-    <table>
-    <tr>
-      <td><img class='legend-icons' src='images/direct-legend.svg'/></td><td>Under direct control of</td>
-    </tr>
-    <tr>
-      <td><img class='legend-icons' src='images/administrative-legend.svg'/></td><td>Under administrative control of</td>
-    </tr>
-    <tr>
-      <td><img class='legend-icons' src='images/ministry-legend.svg'/></td><td>Ministry</td>
-    </tr>
-    </table>
-  </div>
+  <div class="container-fluid container-fluid-mod">
       <div id='left-footer'>
         <img class='footer-icons' src="images/filters.svg" alt="Filter the display" onmouseover="this.src='images/filters-hover.svg'" onmouseout="this.src='images/filters.svg'"  on-click="toggleFilters">
         <img class='footer-icons' src="images/search.svg" alt="Search for an agency" onmouseover="this.src='images/search-hover.svg'" onmouseout="this.src='images/search.svg'">
@@ -290,10 +335,36 @@
       </div>
     <div class="row">
       <div class="col-md-12 mod-layout">
+      <div id='legend' {{#if isLegendVisible}}class="panel panel-default legend-panel-mod"}}{{else}}class='panel panel-default legend-panel-mod hidden'{{/if}}>
+        <h5 class='mp-correction'>LEGEND</h5>
+        <table>
+        <tr>
+          <td><img class='legend-icons' src='images/direct-legend.svg'/></td><td>Under direct control of</td>
+        </tr>
+        <tr>
+          <td><img class='legend-icons' src='images/administrative-legend.svg'/></td><td>Under administrative control of</td>
+        </tr>
+        <tr>
+          <td><img class='legend-icons' src='images/ministry-legend.svg'/></td><td>Ministry</td>
+        </tr>
+        </table>
+      </div>
         <div id="filters" {{#if !isFiltersVisible}}class='hidden'{{/if}}>
           <div class="panel panel-default filter-panel-mod">
-            <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
+            <div class="panel-body sidebar-body sidebar-panel panel-body-mod" style='height:300px;'>
+            <a href="javascript:void(0);" on-click="toggleFilters"><img class='filter-close-position' src='images/close.svg' onmouseover="this.src='images/close-hover.svg'" onmouseout="this.src='images/close.svg'"></a>
             <h5 class='mp-correction'>FILTERS</h5>
+            <dl>
+            <div id='filters-left'>
+            <h6 class='filter-label-mod'>Type of body</h6>
+            {{#types}}
+              <dt>
+                <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleTypesFilter">
+                <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
+              </dt>
+            {{/types}}
+            </div>
+            <div id='filters-right'>
               <h6 class='filter-label-mod'>Issues looked into</h6>
               <dl class='dl-mod'>
                 {{#issues}}
@@ -304,18 +375,10 @@
                 {{/issues}}
               </dl>
               <hr class='hr-mod'>
-              <h6 class='filter-label-mod'>Type of body</h6>
-              <dl>
-              {{#types}}
-                <dt>
-                  <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleTypesFilter">
-                  <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
-                </dt>
-              {{/types}}
-              <hr class='hr-mod'>
               <h6 class='filter-label-mod'>RTI?</h6>
               <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
               <label  for='{{institution-rti}}' class='filter-label-class'>Bodies exempt from RTI</label>
+              </div>
               </dl>
             </div>
           </div>
@@ -323,7 +386,7 @@
         <div id="mynetwork"></div>
 
         <div id="sidebar" {{#if !isSidebarVisible}}class='hidden'{{/if}}>
-          <a href="javascript:void(0);" on-click="closeSidebar">Close</a>
+          <a href="javascript:void(0);" on-click="toggleSidebar"><img class='close-position' src='images/close.svg' onmouseover="this.src='images/close-hover.svg'" onmouseout="this.src='images/close.svg'"></a>
           <div class="panel panel-default panel-mod">
             <div class="panel-body sidebar-body sidebar-panel panel-body-mod">
               {{#selectedInst}}
@@ -350,6 +413,8 @@
                 {{/if}}
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
+                <h5>Sources</h5>
+                <h6>{{selectedInst['Sources']}}</h6>
                 <div id='bug-reporting'>
                   <img style='width:20px; height:20px;' src='images/bug.svg'/>&nbsp;<span style='color:#a8a8a8;'>Found incorrect information?</span>&nbsp;<a target='_blank' href='https://docs.google.com/forms/d/1XsPACAHckWwQqUd0M0I4Ld3X7Ssvor8PQABfcyxWWPI/viewform'>Let us know</a>
                 </div>
@@ -363,6 +428,14 @@
                 <br/><br/><b>Research &amp; Development</b> <br/>Conducting research and development to improve indigenous technologies and build capacity
                 <br/><br/><b>Surveillance</b> <br/>As part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil
                 7 ministries with their respective departments and 55 institutions have been mapped</h6>
+                <hr/>
+                <h5>Credits</h5>
+                <a href='http://www.internetdemocracy.in/'><img src='images/idp-logo.png' style='height: 100px;width: 100px;opacity: 0.5;padding: 13px;float: left;'/></a> <h6 style='color:#888;margin-top: 11px;margin-bottom:17px;'>An initiative by <br/>Internet Democracy Project<br/> <hr style='margin: 7px 0px 4px 0px;'/><span style='font-size:13px'>Research by Nayantara Ranganathan</span></h6>
+                <h6 style='float:left;clear:both;color:#888;font-size:13px;'>Design by&nbsp;&nbsp;<a href='http://www.folo.co.in'><img src='images/fologo.png' style='width:24px;clear:both;opacity:0.6;'/></a></h6>
+                <h6 style='font-size:13px;color:#888;margin-top: 16px;'>Developed by&nbsp;<a style='color:#888;text-decoration:underline;' href='http://www.shreyas.io'>Shreyas Satish</a></h6>
+                <hr/>
+                <h5>Share</h5>
+                <div class="fb-share-button" data-href="https://internetdemocracy.in/watchtower/" data-layout="button_count"></div>
               {{/}}
             </div>
           </div>
@@ -532,7 +605,7 @@
           color: instColor,
           font: '27px arial #000 bold',
           title: institution['Name of Institution'],
-          shadow: {color:'#2D5150'},
+          shadow: {color:'#C6BA99'},
           image: 'images/ministry.png',
           shape: 'image'
         });
@@ -599,7 +672,7 @@
           font: '22px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
-          shadow:{color:'#2D5150'}
+          shadow:{color:'#C6BA99'}
         });
 
         // Ministries will have Direct Control and Partial Control as NA
@@ -634,7 +707,7 @@
           font: '24px arial #fff bold',
           title: institution['Name of Institution'],
           shape: 'box',
-          shadow:{color:'#2D5150'}
+          shadow:{color:'#C6BA99'}
         });
         if (institution['Root'] !== 'NA') {
           institutionEdges.push({
@@ -667,7 +740,6 @@
   }
 
   Watchtower.init();
-
 </script>
 
 </body>
