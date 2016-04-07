@@ -250,6 +250,11 @@
       padding: 0px;
       margin-right: 10px;
     }
+    #legend {
+      position: fixed;
+      bottom: 7%;
+      left: 7%;
+    }
   </style>
 </head>
 <body>
@@ -265,20 +270,22 @@
 <div id='ractive-container'></div>
   <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid">
-  <div id='legend' {{#if isLegendVisible}}class="panel panel-default legend-panel-mod"}}{{else}}class='panel panel-default legend-panel-mod hidden'{{/if}}>
-    <h5 class='mp-correction'>LEGEND</h5>
-    <table>
-    <tr>
-      <td><img class='legend-icons' src='images/direct-legend.svg'/></td><td>Under direct control of</td>
-    </tr>
-    <tr>
-      <td><img class='legend-icons' src='images/administrative-legend.svg'/></td><td>Under administrative control of</td>
-    </tr>
-    <tr>
-      <td><img class='legend-icons' src='images/ministry-legend.svg'/></td><td>Ministry</td>
-    </tr>
-    </table>
-  </div>
+  {{#if isLegendVisible}}
+    <div id='legend' class="panel panel-default legend-panel-mod">
+      <h5 class='mp-correction'>LEGEND</h5>
+      <table>
+      <tr>
+        <td><img class='legend-icons' src='images/direct-legend.svg'/></td><td>Under direct control of</td>
+      </tr>
+      <tr>
+        <td><img class='legend-icons' src='images/administrative-legend.svg'/></td><td>Under administrative control of</td>
+      </tr>
+      <tr>
+        <td><img class='legend-icons' src='images/ministry-legend.svg'/></td><td>Ministry</td>
+      </tr>
+      </table>
+    </div>
+  {{/if}}
       <div id='left-footer'>
         <img class='footer-icons' src="images/filters.svg" alt="Filter the display" onmouseover="this.src='images/filters-hover.svg'" onmouseout="this.src='images/filters.svg'"  on-click="toggleFilters">
 <!--         <img class='footer-icons' src="images/search.svg" alt="Search for an agency" onmouseover="this.src='images/search-hover.svg'" onmouseout="this.src='images/search.svg'">
