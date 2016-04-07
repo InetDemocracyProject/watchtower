@@ -423,6 +423,7 @@
           }
         },
       });
+      watchtower.initMap();
 
       watchtower.ractive.on('handleIssuesFilter', function(e){
         var issues = watchtower.ractive.get('issues');
@@ -464,21 +465,6 @@
 
       watchtower.ractive.on('toggleLegend', function(e){
         watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
-      });
-
-      watchtower.map = watchtower.initMap();
-      watchtower.map.on("select", function (params) {
-        watchtower.ractive.set('instSelected', true);
-        console.log(params.nodes[0]);
-        watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
-          return inst['Serial'] === params.nodes[0];
-        })[0]);
-        watchtower.ractive.set('isSidebarVisible', true);
-        // Watchtower.sidebar.toggle();
-      });
-      watchtower.map.on("deselectNode", function (params) {
-        watchtower.ractive.set('isSidebarVisible', false);
-        // Watchtower.sidebar.toggle();
       });
     }
     var tabletop = Tabletop.init({
@@ -663,7 +649,20 @@
         navigationButtons: true
       }
     };
-    return new vis.Network(container, data, options);
+    watchtower.map = new vis.Network(container, data, options);
+    watchtower.map.on("select", function (params) {
+      watchtower.ractive.set('instSelected', true);
+      console.log(params.nodes[0]);
+      watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
+        return inst['Serial'] === params.nodes[0];
+      })[0]);
+      watchtower.ractive.set('isSidebarVisible', true);
+      // Watchtower.sidebar.toggle();
+    });
+    watchtower.map.on("deselectNode", function (params) {
+      watchtower.ractive.set('isSidebarVisible', false);
+      // Watchtower.sidebar.toggle();
+    });
   }
 
   Watchtower.init();
