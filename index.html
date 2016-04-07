@@ -346,7 +346,11 @@
                 {{/if}}
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['Website link'] !== 'NA'}}
                   <h5>URL</h5>
-                  <h6>{{selectedInst['Website link']}}</h6>
+                  {{#if isURL(selectedInst['Website link'])}}
+                    <h6><a href={{selectedInst['Website link']}} target="_blank">{{selectedInst['Website link']}}</a></h6>
+                  {{else}}
+                    <h6>{{selectedInst['Website link']}}</h6>
+                  {{/if}}
                 {{/if}}
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
@@ -420,6 +424,9 @@
           isLegendVisible: false,
           isMinistryOrDept: function(inst){
             return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
+          },
+          isURL: function(text){
+            return text.trim().indexOf("http") > -1;
           }
         },
       });
