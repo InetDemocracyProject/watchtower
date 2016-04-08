@@ -71,6 +71,7 @@
       right: 0;
       width: 357px;
       border-radius: 0px;
+      z-index: 3;
     }
     .institutionName{
       margin-top: -21px;
@@ -141,11 +142,14 @@
       background-color: white;
       box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
       z-index: 9999;
+      background-size: 27px;
+      background-position-x: 6px;
+      background-position-y: 5px;
     }
 
     div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
         background-image: url("images/zoomout.svg");
-        top: 120px;
+        top: 123px;
         left: 26px;
         width: 40px;
         padding: 5px;
@@ -153,6 +157,8 @@
         background-color: white;
         box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
         z-index: 9999;
+        background-size: 27px;
+        background-position-x: 6px;
     }
 
     div.vis-network div.vis-navigation div.vis-button.vis-up {
@@ -172,7 +178,7 @@
     }
 
     div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
-      display: none; 
+      display: none;
     }
 
     #sidebar {
@@ -267,11 +273,15 @@
       border: 1px solid transparent;
     }
     .sidebar-close-position {
-      position: relative;
+      position: absolute;
       z-index: 999;
       height: 30px;
-      right: 8px;
+      right: 368px;
       top: 10px;
+    }
+    #credits{
+      padding-top: 1px;
+      background-color: #f7f7f7;
     }
   </style>
 </head>
@@ -397,14 +407,16 @@
                 <br/><br/><b>Research &amp; Development</b> <br/>Conducting research and development to improve indigenous technologies and build capacity
                 <br/><br/><b>Surveillance</b> <br/>As part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil
                 7 ministries with their respective departments and 55 institutions have been mapped</h6>
-                <hr/>
-                <h5>Credits</h5>
-                <a href='http://www.internetdemocracy.in/'><img src='images/idp-logo.png' style='height: 100px;width: 100px;opacity: 0.5;padding: 13px;float: left;'/></a> <h6 style='color:#888;margin-top: 11px;margin-bottom:17px;'>An initiative by <br/>Internet Democracy Project<br/> <hr style='margin: 7px 0px 4px 0px;'/><span style='font-size:13px'>Research by Nayantara Ranganathan</span></h6>
-                <h6 style='float:left;clear:both;color:#888;font-size:13px;'>Design by&nbsp;&nbsp;<a href='http://www.folo.co.in'><img src='images/fologo.png' style='width:24px;clear:both;opacity:0.6;'/></a></h6>
-                <h6 style='font-size:13px;color:#888;margin-top: 16px;'>Developed by&nbsp;<a style='color:#888;text-decoration:underline;' href='http://www.shreyas.io'>Shreyas Satish</a></h6>
-                <hr/>
-<!--                 <h5>Share</h5>
-                <div class="fb-share-button" data-href="https://internetdemocracy.in/watchtower/" data-layout="button_count"></div>
+                <hr style='margin-bottom: 0;'/>
+                <div id='credits'>
+                  <h5>Credits</h5>
+                  <a href='http://www.internetdemocracy.in/'><img src='images/idp-logo.png' style='height: 100px;width: 100px;padding: 13px;float: left;'/></a> <h6 style='color:#888;margin-top: 11px;margin-bottom:17px;'>An initiative by <br/>Internet Democracy Project<br/> <hr style='margin: 7px 0px 4px 0px;'/><span style='font-size:13px'>Research by Nayantara Ranganathan</span></h6>
+                  <h6 style='float:left;clear:both;color:#888;font-size:13px;'>Design by&nbsp;&nbsp;<a href='http://www.folo.co.in'><img src='images/fologo.png' style='width:24px;clear:both;opacity:0.6;'/></a></h6>
+                  <h6 style='font-size:13px;color:#888;margin-top: 16px;'>Developed by&nbsp;<a style='color:#888;text-decoration:underline;' href='http://www.shreyas.io'>Shreyas Satish</a></h6>
+                  <hr style='margin-bottom: 0;'/>
+  <!--            <h5>Share</h5>
+                  <div class="fb-share-button" data-href="https://internetdemocracy.in/watchtower/" data-layout="button_count"></div>
+                </div>
  -->              {{/}}
             </div>
           </div>
