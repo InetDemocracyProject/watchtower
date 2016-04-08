@@ -327,10 +327,26 @@
 <div id='ractive-container'></div>
   <script id='watchtower-app' type='text/ractive'>
   <div class="container-fluid container-fluid-mod">
+  {{#if isLegendVisible}}
+    <div id='legend' class="panel panel-default legend-panel-mod">
+      <h5 class='mp-correction'>LEGEND</h5>
+      <table>
+      <tr>
+        <td><img class='legend-icons' src='images/direct-legend.svg'/></td><td>Under direct control of</td>
+      </tr>
+      <tr>
+        <td><img class='legend-icons' src='images/administrative-legend.svg'/></td><td>Under administrative control of</td>
+      </tr>
+      <tr>
+        <td><img class='legend-icons' src='images/ministry-legend.svg'/></td><td>Ministry</td>
+      </tr>
+      </table>
+    </div>
+  {{/if}}
       <div id='left-footer'>
         <img class='footer-icons' src="images/filters.svg" alt="Filter the display" onmouseover="this.src='images/filters-hover.svg'" onmouseout="this.src='images/filters.svg'"  on-click="toggleFilters">
-        <img class='footer-icons' src="images/search.svg" alt="Search for an agency" onmouseover="this.src='images/search-hover.svg'" onmouseout="this.src='images/search.svg'">
-        <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'"  on-click="toggleLegend">
+<!--         <img class='footer-icons' src="images/search.svg" alt="Search for an agency" onmouseover="this.src='images/search-hover.svg'" onmouseout="this.src='images/search.svg'">
+ -->        <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'"  on-click="toggleLegend">
       </div>
       <div id='right-footer'>
         <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="toggleSidebar">
@@ -412,7 +428,11 @@
                 {{/if}}
                 {{#if !isMinistryOrDept(selectedInst) || selectedInst['Website link'] !== 'NA'}}
                   <h5>URL</h5>
-                  <h6>{{selectedInst['Website link']}}</h6>
+                  {{#if isURL(selectedInst['Website link'])}}
+                    <h6><a href={{selectedInst['Website link']}} target="_blank">{{selectedInst['Website link']}}</a></h6>
+                  {{else}}
+                    <h6>{{selectedInst['Website link']}}</h6>
+                  {{/if}}
                 {{/if}}
                 <h5>Mandate</h5>
                 <h6>{{selectedInst['Mandate']}}</h6>
@@ -496,9 +516,13 @@
           isLegendVisible: false,
           isMinistryOrDept: function(inst){
             return inst['Nature (Agency/Department/Ministry)'] === 'Ministry' || inst['Nature (Agency/Department/Ministry)'] === 'Department';
+          },
+          isURL: function(text){
+            return text.trim().indexOf("http") > -1;
           }
         },
       });
+      watchtower.initMap();
 
       watchtower.ractive.on('handleIssuesFilter', function(e){
         var issues = watchtower.ractive.get('issues');
@@ -540,21 +564,6 @@
 
       watchtower.ractive.on('toggleLegend', function(e){
         watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
-      });
-
-      watchtower.map = watchtower.initMap();
-      watchtower.map.on("select", function (params) {
-        watchtower.ractive.set('instSelected', true);
-        console.log(params.nodes[0]);
-        watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
-          return inst['Serial'] === params.nodes[0];
-        })[0]);
-        watchtower.ractive.set('isSidebarVisible', true);
-        // Watchtower.sidebar.toggle();
-      });
-      watchtower.map.on("deselectNode", function (params) {
-        watchtower.ractive.set('isSidebarVisible', false);
-        // Watchtower.sidebar.toggle();
       });
     }
     var tabletop = Tabletop.init({
@@ -739,7 +748,20 @@
         navigationButtons: true
       }
     };
-    return new vis.Network(container, data, options);
+    watchtower.map = new vis.Network(container, data, options);
+    watchtower.map.on("select", function (params) {
+      watchtower.ractive.set('instSelected', true);
+      console.log(params.nodes[0]);
+      watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
+        return inst['Serial'] === params.nodes[0];
+      })[0]);
+      watchtower.ractive.set('isSidebarVisible', true);
+      // Watchtower.sidebar.toggle();
+    });
+    watchtower.map.on("deselectNode", function (params) {
+      watchtower.ractive.set('isSidebarVisible', false);
+      // Watchtower.sidebar.toggle();
+    });
   }
 
   Watchtower.init();
