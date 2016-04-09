@@ -329,32 +329,50 @@
           <div class="panel panel-default filter-panel-mod">
             <div class="panel-body panel-body-mod">
             <h5 class='mp-correction'>FILTERS</h5>
-              <dl>
-                <div id='filters-left'>
-                  <h6 class='filter-label-mod'>Type of body</h6>
+              <div id='filters-left'>
+                <div class="row">
+                  <div class="col-md-7">
+                    <h6 class='filter-label-mod'>Type of body</h6>
+                  </div>
+                  <div class="col-md-5 text-right" style='padding-top:2px;'>
+                    {{#if allTypesUnselected()}}
+                      <a href="javascript:void(0);" on-click='unselectTypes'>Unselect All</a>
+                    {{/if}}
+                  </div>
+                </div>
+                <dl class='dl-mod'>
                   {{#types}}
                     <dt>
-                      <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleTypesFilter">
+                      <input id='{{name}}' type="checkbox" checked='{{selected}}' on-change="handleTypesFilter">
                       <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
                     </dt>
                   {{/types}}
+                </dl>
+                </div>
+                <div id='filters-right' class='pull-right'>
+                  <div class="row">
+                    <div class="col-md-7">
+                      <h6 class='filter-label-mod'>Issues looked into</h6>
+                    </div>
+                    <div class="col-md-5 text-right" style='padding-top:2px;'>
+                      {{#if allIssuesUnselected()}}
+                        <a href="javascript:void(0);" on-click='unselectIssues'>Unselect All</a>
+                      {{/if}}
+                    </div>
                   </div>
-                  <div id='filters-right'>
-                    <h6 class='filter-label-mod'>Issues looked into</h6>
-                    <dl class='dl-mod'>
-                      {{#issues}}
-                        <dt>
-                          <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleIssuesFilter">
-                          <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
-                         </dt>
-                      {{/issues}}
-                    </dl>
-                    <hr class='hr-mod'>
-                    <h6 class='filter-label-mod'>RTI?</h6>
-                    <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
-                    <label  for='{{institution-rti}}' class='filter-label-class'>Bodies exempt from RTI</label>
-                  </div>
-               </dl>
+                  <dl class='dl-mod'>
+                    {{#issues}}
+                      <dt>
+                        <input id='{{name}}' type="checkbox" checked='{{selected}}' on-change="handleIssuesFilter">
+                        <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
+                       </dt>
+                    {{/issues}}
+                  </dl>
+                  <hr class='hr-mod'>
+                  <h6 class='filter-label-mod'>RTI?</h6>
+                  <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
+                  <label  for='{{institution-rti}}' class='filter-label-class'>Bodies exempt from RTI</label>
+                </div>
             </div>
           </div>
         </div>
@@ -477,38 +495,49 @@
           },
           isURL: function(text){
             return text.trim().indexOf("http") > -1;
+          },
+          allTypesUnselected(){
+            return this.get('types').filter(function(type){
+              return type.selected;
+            }).length;
+          },
+          allIssuesUnselected(){
+            return this.get('issues').filter(function(issue){
+              return issue.selected;
+            }).length;
           }
         },
       });
       watchtower.initMap();
 
       watchtower.ractive.on('handleIssuesFilter', function(e){
-        var issues = watchtower.ractive.get('issues');
-        issues.forEach(function(issue){
-          if (issue.name === e.context.name) {
-            issue.selected = !e.context.selected;
-          }
-        });
-        watchtower.ractive.set('issues', issues);
         watchtower.initMap();
-        console.log("toggled");
       });
 
       watchtower.ractive.on('handleTypesFilter', function(e){
-        var types = watchtower.ractive.get('types');
-        types.forEach(function(type){
-          if (type.name === e.context.name) {
-            type.selected = !e.context.selected;
-          }
-        });
-        watchtower.ractive.set('types', types);
         watchtower.initMap();
-        console.log("toggled");
       });
 
       watchtower.ractive.on('handleRTIFilter', function(e){
-        console.log(!e.context.exemptFromRTI);
         watchtower.ractive.set('exemptFromRTI', !e.context.exemptFromRTI);
+        watchtower.initMap();
+      });
+
+      watchtower.ractive.on('unselectTypes', function(e){
+        var types = watchtower.ractive.get('types');
+        types.forEach(function(type){
+          type.selected = false;
+        });
+        watchtower.ractive.set('types', types);
+        watchtower.initMap();
+      });
+
+      watchtower.ractive.on('unselectIssues', function(e){
+        var issues = watchtower.ractive.get('issues');
+        issues.forEach(function(type){
+          type.selected = false;
+        });
+        watchtower.ractive.set('issues', issues);
         watchtower.initMap();
       });
 
@@ -522,13 +551,16 @@
 
       watchtower.ractive.on('toggleFilters', function(e){
         watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
+        watchtower.ractive.set('isLegendVisible', false);
       });
 
       watchtower.ractive.on('toggleLegend', function(e){
         watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
+        watchtower.ractive.set('isFiltersVisible', false);
       });
 
     }
+
     var tabletop = Tabletop.init({
       key: 'https://docs.google.com/spreadsheets/d/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/pubhtml',
       callback: initData
@@ -674,7 +706,6 @@
         }
       } else {
         // Departments
-        console.log(institution);
         institutionNodes.push({
           id: institution['Serial'],
           label: institution['Acronym'],
@@ -714,7 +745,6 @@
     watchtower.map = new vis.Network(container, data, options);
     watchtower.map.on("select", function (params) {
       watchtower.ractive.set('instSelected', true);
-      console.log(params.nodes[0]);
       watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
         return inst['Serial'] === params.nodes[0];
       })[0]);
