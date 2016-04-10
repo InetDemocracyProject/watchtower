@@ -11,6 +11,7 @@
   <link href="ext/vis.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
   <link rel="shortcut icon" href="https://internetdemocracy.in/wp-content/themes/internet-democracy/_img/favicon.ico"/>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
 
   <style type="text/css">
     html {
@@ -255,6 +256,7 @@
     .legend-icons{
       width:20px;
       height:20px;
+      margin-right: 10px;
     }
     .mp-correction{
       margin: 0px 0px 10px 0px;
@@ -299,9 +301,38 @@
       left: 450px;
       width: 20px;
     }
+    .sharing-panel-mod{
+      position: absolute;
+      z-index: 9999999;
+      bottom: 25px;
+      right: 20px;
+      padding:15px 15px 10px 15px;
+    }
+    .social-button{
+      margin-right: 15px;
+      float: left;
+    }
   </style>
 </head>
 <body>
+
+  <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div id='sharing' class="panel panel-default sharing-panel-mod">
+  <h5 class='mp-correction'>SHARE THIS</h5>
+  <div class="fb-share-button social-button" data-href="https://internetdemocracy.in/watchtower/" data-layout="button_count"></div>
+  <a href="https://twitter.com/share" class="twitter-share-button social-button" data-text="A Map of Indian Government's Cyber Security Institutions" data-via="iNetDemocracy">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  <!-- <div class="g-plus social-button" data-action="share" data-height="24" data-href="https://internetdemocracy.in/watchtower/"></div> -->
+</div>
+
 <nav class="navbar navbar-default navbar-mod">
   <div class="container-fluid container-fluid-mod">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -444,10 +475,8 @@
                   <h6 style='float:left;clear:both;color:#888;font-size:13px;'>Design by&nbsp;&nbsp;<a href='http://www.folo.co.in'><img src='images/fologo.png' style='width:24px;clear:both;opacity:0.6;'/></a></h6>
                   <h6 style='font-size:13px;color:#888;margin-top: 16px;'>Developed by&nbsp;<a style='color:#888;text-decoration:underline;' href='http://www.shreyas.io'>Shreyas Satish</a></h6>
                   <hr style='margin-bottom: 0;'/>
-  <!--            <h5>Share</h5>
-                  <div class="fb-share-button" data-href="https://internetdemocracy.in/watchtower/" data-layout="button_count"></div>
                 </div>
- -->              {{/}}
+               {{/}}
             </div>
           </div>
         </div>
