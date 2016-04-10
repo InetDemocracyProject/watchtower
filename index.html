@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>The Watchtower: Mapping the Indian government's Cybersecurity Institutions</title>
+  <title>Watchtower: Mapping the Indian government's Cybersecurity Institutions</title>
   <script   src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
   <script src='ext/ractive.js'></script>
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700,900' rel='stylesheet' type='text/css'>
@@ -217,7 +217,7 @@
 
     #filters-left{
       float: left;
-      margin-right: 20px;
+      margin-right: 0;
       border-right: 1px solid #E6E6E6 ;
       padding-right: 20px;
     }
@@ -290,7 +290,7 @@
   <div class="container-fluid container-fluid-mod">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand navbar-brand-mod" style='color:#5E3242;position:relative;z-index:9999;' href="/">The Watchtower</a>
+      <a class="navbar-brand navbar-brand-mod" style='color:#5E3242;position:relative;z-index:9999;' href="/">Watchtower</a>
       <h6 style='color:#5E3242;clear:both;padding:0px 10px;z-index:9999;'>Mapping the Indian Government's Cyber Security Institutions</h6>
     </div>
   </div><!-- /.container-fluid -->
@@ -320,7 +320,7 @@
  -->        <img class='footer-icons' src="images/legend.svg" alt="View legend" onmouseover="this.src='images/legend-hover.svg'" onmouseout="this.src='images/legend.svg'"  on-click="toggleLegend">
       </div>
       <div id='right-footer'>
-        <img class='footer-icons' src="images/about.svg" alt="About the visualisation" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="toggleSidebar">
+        <img class='footer-icons' src="images/about.svg" alt="The Story" onmouseover="this.src='images/about-hover.svg'" onmouseout="this.src='images/about.svg'" on-click="toggleSidebar">
         <img class='footer-icons' src="images/share.svg" alt="Share this" onmouseover="this.src='images/share-hover.svg'" onmouseout="this.src='images/share.svg'">
       </div>
     <div class="row">
@@ -329,32 +329,50 @@
           <div class="panel panel-default filter-panel-mod">
             <div class="panel-body panel-body-mod">
             <h5 class='mp-correction'>FILTERS</h5>
-              <dl>
-                <div id='filters-left'>
-                  <h6 class='filter-label-mod'>Type of body</h6>
+              <div id='filters-left'>
+                <div class="row">
+                  <div class="col-md-7">
+                    <h6 class='filter-label-mod'>Type of body</h6>
+                  </div>
+                  <div class="col-md-5 text-right" style='padding-top:2px;'>
+                    {{#if allTypesUnselected()}}
+                      <a href="javascript:void(0);" on-click='unselectTypes'>Unselect All</a>
+                    {{/if}}
+                  </div>
+                </div>
+                <dl class='dl-mod'>
                   {{#types}}
                     <dt>
-                      <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleTypesFilter">
+                      <input id='{{name}}' type="checkbox" checked='{{selected}}' on-change="handleTypesFilter">
                       <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
                     </dt>
                   {{/types}}
+                </dl>
+                </div>
+                <div id='filters-right' class='pull-right'>
+                  <div class="row">
+                    <div class="col-md-7">
+                      <h6 class='filter-label-mod'>Issues looked into</h6>
+                    </div>
+                    <div class="col-md-5 text-right" style='padding-top:2px;'>
+                      {{#if allIssuesUnselected()}}
+                        <a href="javascript:void(0);" on-click='unselectIssues'>Unselect All</a>
+                      {{/if}}
+                    </div>
                   </div>
-                  <div id='filters-right'>
-                    <h6 class='filter-label-mod'>Issues looked into</h6>
-                    <dl class='dl-mod'>
-                      {{#issues}}
-                        <dt>
-                          <input id='{{name}}' type="checkbox" {{#if selected}}checked{{/if}} on-change="handleIssuesFilter">
-                          <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
-                         </dt>
-                      {{/issues}}
-                    </dl>
-                    <hr class='hr-mod'>
-                    <h6 class='filter-label-mod'>RTI?</h6>
-                    <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
-                    <label  for='{{institution-rti}}' class='filter-label-class'>Bodies exempt from RTI</label>
-                  </div>
-               </dl>
+                  <dl class='dl-mod'>
+                    {{#issues}}
+                      <dt>
+                        <input id='{{name}}' type="checkbox" checked='{{selected}}' on-change="handleIssuesFilter">
+                        <label  for='{{name}}' class='filter-label-class'>{{name}}</label>
+                       </dt>
+                    {{/issues}}
+                  </dl>
+                  <hr class='hr-mod'>
+                  <h6 class='filter-label-mod'>RTI?</h6>
+                  <input id='institution-rti' type="checkbox" {{#if filter-by-rti}}checked{{/if}} on-change="handleRTIFilter">
+                  <label  for='{{institution-rti}}' class='filter-label-class'>Bodies exempt from RTI</label>
+                </div>
             </div>
           </div>
         </div>
@@ -399,14 +417,27 @@
                 </div>
               {{else}}
                 <img src='images/head.png' style='width:340px;'/>
-                <h6 style='color:#5E3242;'><br/>'Cyber-security' is a phrase that one encounters often in government-speak. But the phrase is used to describe a whole range of efforts and governance mechanisms, so it muddles more than it clarifies. This interactive visualisation maps government bodies at the central level that are engaged in functions of 'cyber-security'.
-                <br/><br/>The issues that these bodies deal with have broadly been grouped into:
-                <br/><br/><b>Infrastructure</b> <br/>The setting up and maintenance of 'information and communication technology' infrastructure for the government
-                <br/><br/><b>Critical Information Infrastructure Protection</b> <br/>Protection of critical information infrastructure like the networks of power grids and banks
-                <br/><br/><b>Global Internet Governance</b> <br/>Representing the Indian government in global internet governance processes, sharing best practices about security and enhancing cooperation with other countries for better law enforcement
-                <br/><br/><b>Research &amp; Development</b> <br/>Conducting research and development to improve indigenous technologies and build capacity
-                <br/><br/><b>Surveillance</b> <br/>As part of security efforts, intelligence agencies not only look out for crimes that are directly related to the interference and disruption of networks, but also criminal activity that involves communication over networks. This includes traditional intelligence agencies as well as specialised agencies dedicated to making networks legible and easy to surveil
-                7 ministries with their respective departments and 55 institutions have been mapped</h6>
+                <h6 style='color:#5E3242;'>
+                <p>
+                  How technologies are perceived and to what ends they are used, at a government-level, is important in shaping its uptake and building trust and confidence for its use. Across the world, governments are getting their feet wet in evolving an understanding of something called ‘cybersecurity’. Successive Indian governments have set up institutional mechanisms for this, with guidance from the National Cyber Security Policy of 2013, section 2 (1) (nb) of the Information Technology Amendment Act 2008, among others.
+                </p>
+                <p>
+                  <b>With this tool, we try to give an overview of the various institutions in the central government of India which are involved in functions of cybersecurity.<b> (The bodies shown are not of similar importance or even effectiveness. However, they all play a part in understanding how the government treats digital technologies at a time when uptake of information technology is seen as crucial for developmental goals, security threats are complex and granular data on citizens is possible for States to acquire.)
+                </p>
+                <ul>
+                  <li>dedicated centers are set up for keeping critical networks like power grids secure from interference</li>
+                  <li>special bodies are delegated for the maintenance of the government's digital resources and offerings like official websites and e-governance services</li>
+                  <li>both civilian and military intelligence agencies seek to manage security risks by monitoring information and communication networks, and expect to be prepared to prevent threats to national security. For those looking to upgrade their ways, ‘cyber’ is the prefix of choice. Some specialised agencies seek to comb social media networks to gain intelligence insights. Some of these bodies have been set up through Acts of legislature while others have been set up merely through executive orders</li>
+                  <li>some mechanisms are set up to create and maintain databases about citizens that help in surveillance, to be shared with other government bodies</li>
+                  <li>efforts to enhance indigenous resource capacity- human and otherwise, are made by setting up research and development bodies. These efforts seeks to make the country self sufficient in its security needs by developing hardware, software and protocol standards. Some of these bodies are set up to be autonomous societies under the Societies Act, and some of them are set up as Section 25 companies under the Companies Act.</li>
+                  <li>on the global front, governments have to represent national interests in negotiations about development of internet-related policies and ownership of critical internet resources. They also seek out cooperation with other countries on law enforcement for trans-national crimes and exchange notes on best practices. 
+
+
+There is a lack of uniformity in the level of detail about each body, and this is because primary source information about many of these bodies are not easily available, and several of them are exempt from disclosing information about themselves under the Right to Information Act. 
+
+The dataset is available at <>. It is licensed under Creative Commons BY 3.0.</li>
+                </ul>
+                </h6>
                 <hr style='margin-bottom: 0;'/>
                 <div id='credits'>
                   <h5>Credits</h5>
@@ -477,38 +508,49 @@
           },
           isURL: function(text){
             return text.trim().indexOf("http") > -1;
+          },
+          allTypesUnselected(){
+            return this.get('types').filter(function(type){
+              return type.selected;
+            }).length;
+          },
+          allIssuesUnselected(){
+            return this.get('issues').filter(function(issue){
+              return issue.selected;
+            }).length;
           }
         },
       });
       watchtower.initMap();
 
       watchtower.ractive.on('handleIssuesFilter', function(e){
-        var issues = watchtower.ractive.get('issues');
-        issues.forEach(function(issue){
-          if (issue.name === e.context.name) {
-            issue.selected = !e.context.selected;
-          }
-        });
-        watchtower.ractive.set('issues', issues);
         watchtower.initMap();
-        console.log("toggled");
       });
 
       watchtower.ractive.on('handleTypesFilter', function(e){
-        var types = watchtower.ractive.get('types');
-        types.forEach(function(type){
-          if (type.name === e.context.name) {
-            type.selected = !e.context.selected;
-          }
-        });
-        watchtower.ractive.set('types', types);
         watchtower.initMap();
-        console.log("toggled");
       });
 
       watchtower.ractive.on('handleRTIFilter', function(e){
-        console.log(!e.context.exemptFromRTI);
         watchtower.ractive.set('exemptFromRTI', !e.context.exemptFromRTI);
+        watchtower.initMap();
+      });
+
+      watchtower.ractive.on('unselectTypes', function(e){
+        var types = watchtower.ractive.get('types');
+        types.forEach(function(type){
+          type.selected = false;
+        });
+        watchtower.ractive.set('types', types);
+        watchtower.initMap();
+      });
+
+      watchtower.ractive.on('unselectIssues', function(e){
+        var issues = watchtower.ractive.get('issues');
+        issues.forEach(function(type){
+          type.selected = false;
+        });
+        watchtower.ractive.set('issues', issues);
         watchtower.initMap();
       });
 
@@ -522,13 +564,16 @@
 
       watchtower.ractive.on('toggleFilters', function(e){
         watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
+        watchtower.ractive.set('isLegendVisible', false);
       });
 
       watchtower.ractive.on('toggleLegend', function(e){
         watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
+        watchtower.ractive.set('isFiltersVisible', false);
       });
 
     }
+
     var tabletop = Tabletop.init({
       key: 'https://docs.google.com/spreadsheets/d/1prS4TLHjVimdW5teFYluTqBpTMGwnt12R-bt71dU5tM/pubhtml',
       callback: initData
@@ -674,7 +719,6 @@
         }
       } else {
         // Departments
-        console.log(institution);
         institutionNodes.push({
           id: institution['Serial'],
           label: institution['Acronym'],
@@ -714,7 +758,6 @@
     watchtower.map = new vis.Network(container, data, options);
     watchtower.map.on("select", function (params) {
       watchtower.ractive.set('instSelected', true);
-      console.log(params.nodes[0]);
       watchtower.ractive.set('selectedInst', watchtower.ractive.get('institutions').filter(function(inst){
         return inst['Serial'] === params.nodes[0];
       })[0]);
