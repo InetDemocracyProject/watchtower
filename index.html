@@ -606,17 +606,21 @@ There is a lack of uniformity in the level of detail about each body, and this i
       });
 
       watchtower.ractive.on('toggleShare', function(e){
+        watchtower.ractive.set('isLegendVisible', false);
+        watchtower.ractive.set('isFiltersVisible', false);
         $('#sharing').toggle();
       });
 
       watchtower.ractive.on('toggleFilters', function(e){
-        watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
         watchtower.ractive.set('isLegendVisible', false);
+        $('#sharing').hide();
+        watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
       });
 
       watchtower.ractive.on('toggleLegend', function(e){
-        watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
         watchtower.ractive.set('isFiltersVisible', false);
+        $('#sharing').hide();
+        watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
       });
 
     }
