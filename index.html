@@ -457,10 +457,16 @@
                   <img style='width:20px; height:20px;' src='images/bug.svg'/>&nbsp;<span style='color:#a8a8a8;'>Found incorrect information?</span>&nbsp;<a target='_blank' href='https://docs.google.com/forms/d/1XsPACAHckWwQqUd0M0I4Ld3X7Ssvor8PQABfcyxWWPI/viewform'>Let us know</a>
                 </div>
               {{else}}
-                <img src='images/head2.png' style='width:340px;'/>
+                <img src='images/head.png' style='width:340px;'/>
                 <h6 style='color:#5E3242;padding-top:15px'>
-                How technologies are perceived and to what ends they are used, at a government-level, is important in shaping its uptake and building trust and confidence for its use. Across the world, governments are getting their feet wet in evolving an understanding of something called &lsquo;cybersecurity&rsquo;. Successive Indian governments have set up institutional mechanisms for this, with guidance from the National Cyber Security Policy of 2013, section 2 (1) (nb) of the Information Technology Amendment Act 2008, among others. With this tool, we try to give an overview of the various institutions in the central government of India which are involved in functions of cybersecurity. (The bodies shown are not of similar importance or even effectiveness. However, they all play a part in understanding how the government treats digital technologies at a time when uptake of information technology is seen as crucial for developmental goals, security threats are complex and granular data on citizens is possible for States to acquire.
-                  <br/><br/>A little more information about the bodies:
+                <p>
+                How technologies are perceived and to what ends they are used, at a government-level, is important in shaping its uptake and building trust and confidence for its use. Across the world, governments are getting their feet wet in evolving an understanding of something called &lsquo;cybersecurity&rsquo;. Successive Indian governments have set up institutional mechanisms for this, with guidance from the National Cyber Security Policy of 2013, section 2 (1) (nb) of the Information Technology Amendment Act 2008, among others.
+                </p>
+                <p>
+                With this tool, we try to give an overview of the various institutions in the central government of India which are involved in functions of cybersecurity. (The bodies shown are not of similar importance or even effectiveness. However, they all play a part in understanding how the government treats digital technologies at a time when uptake of information technology is seen as crucial for developmental goals, security threats are complex and granular data on citizens is possible for States to acquire.
+                </p>
+                <br/>
+                A little more information about the bodies:
 <ul style='padding-left: 16px;'>
 <br/><li>Dedicated centers are set up for keeping critical networks like power grids secure from interference</li>
 <br/><li>special bodies are delegated for the maintenance of the government&lsquo;s digital resources and offerings like official websites and e-governance services</li>
@@ -470,7 +476,7 @@ some mechanisms are set up to create and maintain databases about citizens that 
 <br/><li>On the global front, governments have to represent national interests in negotiations about development of internet-related policies and ownership of critical internet resources. They also seek out cooperation with other countries on law enforcement for trans-national crimes and exchange notes on best practices.</li>
 </ul>
 There is a lack of uniformity in the level of detail about each body, and this is because primary source information about many of these bodies are not easily available, and several of them are exempt from disclosing information about themselves under the Right to Information Act.
-<br/><br/>The dataset is available at <b>this link</b>. It is licensed under Creative Commons BY 3.0.
+<!-- <br/><br/>The dataset is available at <b>this link</b>. It is licensed under Creative Commons BY 3.0. -->
                 </h6>
                 <hr style='margin-bottom: 0;'/>
                 <div id='credits'>
@@ -502,6 +508,7 @@ There is a lack of uniformity in the level of detail about each body, and this i
 
   Watchtower.init = function(data, tabletop) {
     var watchtower = this;
+    $('#sharing').hide();
     var initData = function(){
       watchtower.sheets = tabletop.sheets();
       var institutions = watchtower.sheets["All Institutions"].elements;
@@ -594,14 +601,22 @@ There is a lack of uniformity in the level of detail about each body, and this i
         watchtower.ractive.set('isSidebarVisible', !watchtower.ractive.get('isSidebarVisible'));
       });
 
-      watchtower.ractive.on('toggleFilters', function(e){
-        watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
+      watchtower.ractive.on('toggleShare', function(e){
         watchtower.ractive.set('isLegendVisible', false);
+        watchtower.ractive.set('isFiltersVisible', false);
+        $('#sharing').toggle();
+      });
+
+      watchtower.ractive.on('toggleFilters', function(e){
+        watchtower.ractive.set('isLegendVisible', false);
+        $('#sharing').hide();
+        watchtower.ractive.set('isFiltersVisible', !watchtower.ractive.get('isFiltersVisible'));
       });
 
       watchtower.ractive.on('toggleLegend', function(e){
-        watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
         watchtower.ractive.set('isFiltersVisible', false);
+        $('#sharing').hide();
+        watchtower.ractive.set('isLegendVisible', !watchtower.ractive.get('isLegendVisible'));
       });
 
     }
