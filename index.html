@@ -480,7 +480,7 @@ some mechanisms are set up to create and maintain databases about citizens that 
 <br/><li>On the global front, governments have to represent national interests in negotiations about development of internet-related policies and ownership of critical internet resources. They also seek out cooperation with other countries on law enforcement for trans-national crimes and exchange notes on best practices.</li>
 </ul>
 There is a lack of uniformity in the level of detail about each body, and this is because primary source information about many of these bodies are not easily available, and several of them are exempt from disclosing information about themselves under the Right to Information Act.
-<br/><br/>The dataset is available at <b>this link</b>. It is licensed under Creative Commons BY 3.0.
+<!-- <br/><br/>The dataset is available at <b>this link</b>. It is licensed under Creative Commons BY 3.0. -->
                 </h6>
                 <hr style='margin-bottom: 0;'/>
                 <div id='credits'>
@@ -512,6 +512,7 @@ There is a lack of uniformity in the level of detail about each body, and this i
 
   Watchtower.init = function(data, tabletop) {
     var watchtower = this;
+    $('#sharing').hide();
     var initData = function(){
       watchtower.sheets = tabletop.sheets();
       var institutions = watchtower.sheets["All Institutions"].elements;
@@ -602,6 +603,10 @@ There is a lack of uniformity in the level of detail about each body, and this i
 
       watchtower.ractive.on('toggleSidebar', function(e){
         watchtower.ractive.set('isSidebarVisible', !watchtower.ractive.get('isSidebarVisible'));
+      });
+
+      watchtower.ractive.on('toggleShare', function(e){
+        $('#sharing').toggle();
       });
 
       watchtower.ractive.on('toggleFilters', function(e){
