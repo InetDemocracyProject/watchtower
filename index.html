@@ -683,7 +683,7 @@ The lack of uniformity in the level of detail about each body is partly because 
           color: '#fff'
         })
 
-      } else if (isAgency(institution)) {
+      } else {
         // Filters start
 
         var shouldShowInst = true;
@@ -737,57 +737,59 @@ The lack of uniformity in the level of detail about each body is partly because 
           shouldShowInst = shouldShowInst && institution['RTI?'] === 'Yes';
         }
 
-        institutionNodes.push({
-          id: institution['Serial'],
-          label: institution['Acronym'],
-          color: shouldShowInst ? instColor : Watchtower.styles.institutions.dimmed,
-          font: '22px arial #fff bold',
-          title: institution['Name of Institution'],
-          shape: 'box',
-          shadow:{color:'#c6ba99'}
-        });
-
-        // Ministries will have Direct Control and Partial Control as NA
-        if (institution['Direct control'] !== 'NA') {
-          institutionEdges.push({
-            from: institution['Serial'],
-            to: institutions.filter(function(inst){
-              return inst['Acronym'] === institution['Direct control']
-            })[0]['Serial'],
-            arrows:{to:{scaleFactor:0.25}},
-            color: Watchtower.styles.institutions['Agency']
-          })
-        }
-        if (institution['Partial control'] !== 'NA') {
-          institutionEdges.push({
-            from: institution['Serial'],
-            to: institutions.filter(function(inst){
-              return inst['Acronym'] === institution['Partial control']
-            })[0]['Serial'],
-            arrows:{to:{scaleFactor:0.25}},
-            dashes: true,
-            color: Watchtower.styles.institutions['Agency']
-          })
-        }
-      } else {
-        // Departments
-        institutionNodes.push({
-          id: institution['Serial'],
-          label: institution['Acronym'],
-          color: instColor,
-          font: '24px arial #fff bold',
-          title: institution['Name of Institution'],
-          shape: 'box',
-          shadow:{color:'#c6ba99'}
-        });
-        if (institution['Root'] !== 'NA') {
-          institutionEdges.push({
-            from: institution['Serial'],
-            to: institutions.filter(function(inst){
-              return inst['Acronym'] === institution['Root']
-            })[0]['Serial'],
-            arrows:{to:{scaleFactor:0.25}}
+        if (isAgency(institution)) {
+          institutionNodes.push({
+            id: institution['Serial'],
+            label: institution['Acronym'],
+            color: shouldShowInst ? instColor : Watchtower.styles.institutions.dimmed,
+            font: '22px arial #fff bold',
+            title: institution['Name of Institution'],
+            shape: 'box',
+            shadow:{color:'#c6ba99'}
           });
+
+          // Ministries will have Direct Control and Partial Control as NA
+          if (institution['Direct control'] !== 'NA') {
+            institutionEdges.push({
+              from: institution['Serial'],
+              to: institutions.filter(function(inst){
+                return inst['Acronym'] === institution['Direct control']
+              })[0]['Serial'],
+              arrows:{to:{scaleFactor:0.25}},
+              color: Watchtower.styles.institutions['Agency']
+            })
+          }
+          if (institution['Partial control'] !== 'NA') {
+            institutionEdges.push({
+              from: institution['Serial'],
+              to: institutions.filter(function(inst){
+                return inst['Acronym'] === institution['Partial control']
+              })[0]['Serial'],
+              arrows:{to:{scaleFactor:0.25}},
+              dashes: true,
+              color: Watchtower.styles.institutions['Agency']
+            })
+          }
+        } else {
+          // Department
+          institutionNodes.push({
+            id: institution['Serial'],
+            label: institution['Acronym'],
+            color: shouldShowInst ? instColor : Watchtower.styles.institutions.dimmed,
+            font: '24px arial #fff bold',
+            title: institution['Name of Institution'],
+            shape: 'box',
+            shadow:{color:'#c6ba99'}
+          });
+          if (institution['Root'] !== 'NA') {
+            institutionEdges.push({
+              from: institution['Serial'],
+              to: institutions.filter(function(inst){
+                return inst['Acronym'] === institution['Root']
+              })[0]['Serial'],
+              arrows:{to:{scaleFactor:0.25}}
+            });
+          }
         }
       }
     });
