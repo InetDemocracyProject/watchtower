@@ -714,17 +714,23 @@ The lack of uniformity in the level of detail about each body is partly because 
           });
           shouldShowInst = isIssuePresent && isTypePresent;
         } else if (selectedIssues.length) {
+          var isIssuePresent = false;
           selectedIssues.forEach(function(selectedIssue){
-            if (instIssues.indexOf(selectedIssue.name) === -1) {
-              shouldShowInst = false;
+            if (instIssues.indexOf(selectedIssue.name) > -1) {
+              isIssuePresent = true;
             }
           });
+          shouldShowInst = isIssuePresent;
         } else if (selectedTypes.length) {
+          var isTypePresent = false;
           selectedTypes.forEach(function(selectedType){
-            if (instTypes.indexOf(selectedType.name) === -1) {
-              shouldShowInst = false;
+            if (instTypes.indexOf(selectedType.name) > -1) {
+              isTypePresent = true;
             }
           });
+          shouldShowInst = isTypePresent;
+        } else if (!selectedIssues.length && !selectedTypes.length) {
+          shouldShowInst = false;
         }
 
         if (watchtower.ractive.get('exemptFromRTI')){
