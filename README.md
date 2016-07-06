@@ -4,7 +4,7 @@
 ![Imgur](http://i.imgur.com/E2FgxYG.jpg)
 
 ### Architecture
-Watchtower is built as a web application built with HTML5, CSS, JavaScript, and is backed by a single data source, a [Google Sheet](https://docs.google.com/spreadsheets/d/1t_7K7Asg92NXmt9EDxvrQFYdy1w7XWMsft2xJTRTo8M/edit?usp=sharing).
+Watchtower is built as a web application with HTML5, CSS, JavaScript, and is backed by a single data source, a [Google Sheet](https://docs.google.com/spreadsheets/d/1t_7K7Asg92NXmt9EDxvrQFYdy1w7XWMsft2xJTRTo8M/edit?usp=sharing).
 Watchtower also relies on a few open source libraries which are detailed below. Watchtower itself, is [open source](https://github.com/InetDemocracyProject/watchtower/blob/gh-pages/LICENSE).
 
 Watchtower mainly consists of the following components:
