@@ -8,6 +8,7 @@ Watchtower is built as a web application with HTML5, CSS, JavaScript, and is bac
 Watchtower also relies on a few open source libraries which are detailed below. Watchtower itself, is [open source](https://github.com/InetDemocracyProject/watchtower/blob/gh-pages/LICENSE).
 
 Watchtower mainly consists of the following components:
+
 1. A sidebar that provides an overview of the project. It also serves to show contextual information, such as government body's details when it's clicked on.
 2. A map of India's government bodies working on infosec.
 3. A widget to filter the bodies in the visualization based on some criterion.
